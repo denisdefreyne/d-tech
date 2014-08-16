@@ -1,1 +1,2 @@
 love = {}
+love.audio = {}
