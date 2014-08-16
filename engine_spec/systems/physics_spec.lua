@@ -1,4 +1,4 @@
-require('engine.spec.helper')
+require('engine_spec.helper')
 
 local Engine = require('engine')
 
