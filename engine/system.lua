@@ -1,6 +1,7 @@
 local here = (...):match("(.-)[^%.]+$")
 
 local Engine_Components = require(here .. 'components')
+local Signal        = require('engine.vendor.hump.signal')
 
 local System = {}
 
@@ -8,13 +9,35 @@ function System.newType()
   return setmetatable({}, { __index = System })
 end
 
-function System.new(class, entities, requiredComponentTypes)
+function System.new(class, entities, requiredComponentTypes, signalNames)
   local t = {
     entities = entities,
     requiredComponentTypes = requiredComponentTypes,
+    signalNames = signalNames or {},
+    receivedSignals = {},
+    signalHandles = {}
   }
 
+  local signalReceivedFunction = function(name)
+    return function(attributes)
+      print("received " .. name)
+      table.insert(t.receivedSignals, { name = name, attributes = attributes })
+    end
+  end
+
+  for _, name in pairs(t.signalNames) do
+    print("registering " .. name)
+    local handle = Signal.register(name, signalReceivedFunction(name))
+    table.insert(t.signalHandles, { name = name, handle = handle })
+  end
+
   return setmetatable(t, { __index = class })
+end
+
+function System:leave()
+  for _, handle in pairs(self.handles) do
+    Signal.remove(handle.name, handle.handle)
+  end
 end
 
 local function localdt(entity, dt)
@@ -36,15 +59,28 @@ local function allComponentsPresent(entity, requiredComponentTypes)
 end
 
 function System:update(dt)
-  for entity in self.entities:pairs() do
-    if allComponentsPresent(entity, self.requiredComponentTypes) then
-      self:updateEntity(entity, localdt(entity, dt))
+  -- Handle signals
+  if self.handleSignal then
+    for _, signal in pairs(self.receivedSignals) do
+      self:handleSignal(signal.name, signal.attributes)
+    end
+  end
+  self.receivedSignals = {}
+
+  -- Handle entities
+  if self.updateEntity then
+    for entity in self.entities:pairs() do
+      if allComponentsPresent(entity, self.requiredComponentTypes) then
+        self:updateEntity(entity, localdt(entity, dt))
+      end
     end
   end
 end
 
-function System:updateEntity(entity, dt)
-  -- To be overridden
-end
+-- To be overridden:
+--   function System:handleSignal(name, attributes)
+
+-- To be overridden:
+--   function System:updateEntity(entity, dt)
 
 return System

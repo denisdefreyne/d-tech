@@ -6,6 +6,8 @@ CollisionDetection.__index = CollisionDetection
 
 local SpatialHash = require('engine.vendor.collider.spatialhash')
 
+CollisionDetection.signal = 'engine:systems:collision:detected'
+
 local function mapEntity(collision, entity)
   local rect = Engine_Helper.rectForEntity(entity)
   if not rect then return end
@@ -94,6 +96,7 @@ function CollisionDetection:updateEntity(entity, dt)
 
       if otherRect and rect:collidesWith(otherRect) then
         Signal.emit('game:systems:collision:detected', entity, otherEntity)
+        Signal.emit(CollisionDetection.signal, { a = entity, b = otherEntity })
       end
     end
   end
