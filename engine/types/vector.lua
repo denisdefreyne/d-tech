@@ -17,10 +17,12 @@ end
 
 function Vector:invertX()
   self.x = - self.x
+  return self
 end
 
 function Vector:invertY()
   self.y = - self.y
+  return self
 end
 
 function Vector:limitToLength(maxLength)

@@ -15,7 +15,7 @@ describe('Vector', function()
       assert.are.same(subject.y, 5)
 
       local res = subject:invertX()
-      assert.are.equals(res, nil)
+      assert.are.equals(res, subject)
 
       assert.are.same(subject.x, -2)
       assert.are.same(subject.y, 5)
@@ -28,7 +28,7 @@ describe('Vector', function()
       assert.are.same(subject.y, 5)
 
       local res = subject:invertY()
-      assert.are.equals(res, nil)
+      assert.are.equals(res, subject)
 
       assert.are.same(subject.x, 2)
       assert.are.same(subject.y, -5)
