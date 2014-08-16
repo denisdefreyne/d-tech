@@ -49,6 +49,19 @@ function EntitiesCollection:firstWithComponent(componentType)
   return self:firstWithComponents({ componentType })
 end
 
+function EntitiesCollection:withExactComponent(component)
+  local findFn = function(e)
+    for k, v in pairs(e) do
+      if v == component then
+        return true
+      end
+    end
+    return false
+  end
+
+  return self:find(findFn)
+end
+
 function EntitiesCollection:firstWithComponents(componentTypes)
   local findFn = function(e)
     for _, componentType in pairs(componentTypes) do

@@ -42,12 +42,15 @@ function CollisionDetection.new(entities)
   entities:addRemoveCallback(t.callbacks.removeEntity)
 
   -- Set position update callback
-  local entityUpdatePosition = function(entity, dx, dy)
+  local entityUpdatePosition = function(attributes)
+    local component = attributes.component
+    local entity = entities:withExactComponent(component)
+
     local oldRect = Engine_Helper.rectForEntity(entity)
     local newRect = Engine_Helper.rectForEntity(entity)
 
-    oldRect.origin.x = oldRect.origin.x - dx
-    oldRect.origin.y = oldRect.origin.y - dy
+    oldRect.origin.x = oldRect.origin.x - attributes.dx
+    oldRect.origin.y = oldRect.origin.y - attributes.dy
 
     collision.spatialHash:update(
       entity,
@@ -55,7 +58,7 @@ function CollisionDetection.new(entities)
       newRect:left(), newRect:top(), newRect:right(), newRect:bottom())
   end
   t.callbacks.entityUpdatePosition = entityUpdatePosition
-  Signal.register('engine:systems:physics:position-updated', entityUpdatePosition)
+  Signal.register(Engine_Components.Position.signal, entityUpdatePosition)
 
   -- Add to hash
   for entity in collision.entities:pairs() do
@@ -66,7 +69,7 @@ function CollisionDetection.new(entities)
 end
 
 function CollisionDetection:leave()
-  Signal.remove('engine:systems:physics:position-updated', self.callbacks.entityUpdatePosition)
+  Signal.remove(Engine_Components.Position.signal, self.callbacks.entityUpdatePosition)
   self.entities:removeAddCallback(self.callbacks.addEntity)
   self.entities:removeRemoveCallback(self.callbacks.removeEntity)
 end

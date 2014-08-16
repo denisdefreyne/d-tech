@@ -22,8 +22,6 @@ function Physics:updateEntity(entity, dt)
 
   position.x = position.x + dx
   position.y = position.y + dy
-
-  Signal.emit('engine:systems:physics:position-updated', entity, dx, dy)
 end
 
 return Physics

@@ -18,11 +18,13 @@ Components.Input = {
   format = function(self) return 'Yes' end,
 }
 
+local positionSignal = 'engine:components:position:updated'
 Components.Position = {
   order  = -98,
   name   = 'Position',
-  new    = function(x, y) return Engine_Types.Point.new(x, y) end,
+  new    = function(x, y) return Engine_Types.Point.new(x, y, positionSignal) end,
   format = function(self) return self:format() end,
+  signal = positionSignal,
 }
 
 Components.AnchorPoint = {
