@@ -33,7 +33,7 @@ function System.new(class, entities, requiredComponentTypes, signalNames)
 end
 
 function System:leave()
-  for _, handle in pairs(self.handles) do
+  for _, handle in pairs(self.signalHandles) do
     Signal.remove(handle.name, handle.handle)
   end
 end
