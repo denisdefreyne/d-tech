@@ -20,13 +20,11 @@ function System.new(class, entities, requiredComponentTypes, signalNames)
 
   local signalReceivedFunction = function(name)
     return function(attributes)
-      print("received " .. name)
       table.insert(t.receivedSignals, { name = name, attributes = attributes })
     end
   end
 
   for _, name in pairs(t.signalNames) do
-    print("registering " .. name)
     local handle = Signal.register(name, signalReceivedFunction(name))
     table.insert(t.signalHandles, { name = name, handle = handle })
   end

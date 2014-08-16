@@ -1,5 +1,6 @@
-local Engine_Helper = require('engine.helper')
-local Signal        = require('engine.vendor.hump.signal')
+local Engine_Helper     = require('engine.helper')
+local Engine_Components = require('engine.components')
+local Signal            = require('engine.vendor.hump.signal')
 
 local CollisionDetection = {}
 CollisionDetection.__index = CollisionDetection
@@ -77,13 +78,23 @@ function CollisionDetection:update(dt)
 end
 
 function CollisionDetection:draw()
-  --[[
+  ---[[
   love.graphics.setColor(255, 255, 255, 255)
   self.spatialHash:draw('line', true, false)
 
   love.graphics.setColor(255, 255, 255, 50)
   self.spatialHash:draw('fill', false)
   --]]
+end
+
+function CollisionDetection:_pairInteracts(a, b)
+  local aCollisionGroup = a:get(Engine_Components.CollisionGroup)
+  local bCollisionGroup = b:get(Engine_Components.CollisionGroup)
+
+  if not aCollisionGroup then return false end
+  if not bCollisionGroup then return false end
+
+  return aCollisionGroup.name ~= bCollisionGroup.name
 end
 
 function CollisionDetection:updateEntity(entity, dt)
@@ -95,8 +106,10 @@ function CollisionDetection:updateEntity(entity, dt)
       local otherRect = Engine_Helper.rectForEntity(otherEntity)
 
       if otherRect and rect:collidesWith(otherRect) then
-        Signal.emit('game:systems:collision:detected', entity, otherEntity)
-        Signal.emit(CollisionDetection.signal, { a = entity, b = otherEntity })
+        if self:_pairInteracts(entity, otherEntity) then
+          Signal.emit('game:systems:collision:detected', entity, otherEntity)
+          Signal.emit(CollisionDetection.signal, { a = entity, b = otherEntity })
+        end
       end
     end
   end

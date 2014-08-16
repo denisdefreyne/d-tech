@@ -124,4 +124,11 @@ Components.Button = {
   format = function(self) return self.name end,
 }
 
+Components.CollisionGroup = {
+  order  = -83,
+  name   = 'Collision group',
+  new    = function(name) return { name = name } end,
+  format = function(self) return self.name end,
+}
+
 return Components
