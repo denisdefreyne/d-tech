@@ -1,5 +1,13 @@
 local Gamestate = {}
 
+function Gamestate.new(spaces)
+  local t = {
+    spaces = spaces
+  }
+
+  return setmetatable(t, { __index = Gamestate })
+end
+
 function Gamestate:update(dt)
   for _, space in ipairs(self.spaces) do
     if space.update then space:update(dt) end
