@@ -66,6 +66,7 @@ end
 
 function Rendering:draw()
   local camera = self.entities:firstWithComponent(Engine_Components.Camera)
+
   local cameraPosition = camera and camera:get(Engine_Components.Position) or nil
   if cameraPosition then
     lg.push()
@@ -73,14 +74,21 @@ function Rendering:draw()
     lg.translate(lw.getWidth()/2, lw.getHeight()/2)
   end
 
+  local cameraScale = camera and camera:get(Engine_Components.Scale) or nil
+  if cameraScale then
+    lg.push()
+    lg.translate(lw.getWidth()/2, lw.getHeight()/2)
+    lg.scale(cameraScale.value)
+    lg.translate(-lw.getWidth()/2, -lw.getHeight()/2)
+  end
+
   love.graphics.setColor(255, 255, 255, 255)
   for entity in ipairsSortedByZ(self.entities) do
     self:drawEntity(entity)
   end
 
-  if cameraPosition then
-    lg.pop()
-  end
+  if cameraScale    then lg.pop() end
+  if cameraPosition then lg.pop() end
 end
 
 function Rendering:drawEntity(entity)
