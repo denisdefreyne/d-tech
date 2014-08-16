@@ -81,11 +81,11 @@ function CollisionDetection:update(dt)
 end
 
 function CollisionDetection:draw()
-  ---[[
-  love.graphics.setColor(255, 255, 255, 255)
+  --[[
+  love.graphics.setColor(255, 255, 255, 30)
   self.spatialHash:draw('line', true, false)
 
-  love.graphics.setColor(255, 255, 255, 50)
+  love.graphics.setColor(255, 255, 255, 20)
   self.spatialHash:draw('fill', false)
   --]]
 end
