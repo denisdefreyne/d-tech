@@ -133,4 +133,11 @@ Components.CollisionGroup = {
   format = function(self) return self.name end,
 }
 
+Components.ScreenPosition = {
+  order  = -82,
+  name   = 'Screen position',
+  new    = function(x, y) return Engine_Types.Point.new(x, y) end,
+  format = function(self) return self:format() end
+}
+
 return Components

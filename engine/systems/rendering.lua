@@ -4,6 +4,7 @@ Rendering.__index = Rendering
 local Engine_AssetManager = require('engine.asset_manager')
 local Engine_Helper       = require('engine.helper')
 local Engine_Components   = require('engine.components')
+local Engine_Types        = require('engine.types')
 
 local lg = love.graphics
 local lw = love.window
@@ -81,38 +82,50 @@ end
 
 function Rendering:draw()
   self:_foreachCamera(function(camera)
-    local cameraPosition = camera:get(Engine_Components.Position) or nil
-    if cameraPosition then
-      lg.push()
-      lg.translate(-cameraPosition.x, -cameraPosition.y)
-      lg.translate(lw.getWidth()/2, lw.getHeight()/2)
-    end
+    local position       = camera:get(Engine_Components.Position)
+    local screenPosition = camera:get(Engine_Components.ScreenPosition)
+    local size           = camera:get(Engine_Components.Size)
+    local scale          = camera:get(Engine_Components.Scale)
 
-    local cameraScale = camera:get(Engine_Components.Scale) or nil
-    if cameraScale then
-      lg.push()
-      lg.translate(lw.getWidth()/2, lw.getHeight()/2)
-      lg.scale(cameraScale.value)
-      lg.translate(-lw.getWidth()/2, -lw.getHeight()/2)
-    end
+    if not size           then error("Camera lacks size")            end
+    if not position       then error("Camera lacks position")        end
+    if not screenPosition then error("Camera has no lacks position") end
 
-    local cameraSize = camera:get(Engine_Components.Size) or nil
-    if cameraSize then
-      local stencilRect = Engine_Helper.rectForEntity(camera)
-      lg.setStencil(function()
-        lg.rectangle(
-          "fill",
-          stencilRect.origin.x, stencilRect.origin.y,
-          stencilRect.size.width, stencilRect.size.height
-        )
-      end)
+    local rect = Engine_Helper.rectForEntity(camera)
+
+    lg.push()
+
+    -- Center on world position
+    -- TODO: Take anchor point into account
+    lg.translate(
+      size.width / 2 - position.x,
+      size.height / 2 - position.y)
+
+    -- Center on screen position
+    -- TODO: Take anchor point into account
+    lg.translate(
+      screenPosition.x - size.width / 2,
+      screenPosition.y - size.height / 2
+    )
+
+    lg.setStencil(function()
+      lg.rectangle("fill", rect.origin.x, rect.origin.y, size.width, size.height)
+    end)
+
+    lg.setColor(255, 0, 0, 255)
+    lg.rectangle("line", rect.origin.x, rect.origin.y, size.width, size.height)
+
+    if scale then
+      lg.translate(rect:xMiddle(), rect:yMiddle())
+      lg.scale(scale.value, scale.value)
+      lg.translate(-rect:xMiddle(), -rect:yMiddle())
     end
 
     self:_drawAllEntities()
 
-    if cameraScale    then lg.pop() end
-    if cameraPosition then lg.pop() end
-    if cameraSize     then lg.setStencil() end
+    lg.setStencil()
+
+    lg.pop()
   end)
 end
 
