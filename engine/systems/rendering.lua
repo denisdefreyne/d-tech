@@ -73,7 +73,7 @@ function Rendering:_drawAllEntities()
 end
 
 function Rendering:_foreachCamera(fn)
-  for entity in self.entities:pairs() do
+  for entity in ipairsSortedByZ(self.entities) do
     if entity:get(Engine_Components.Camera) then
       fn(entity)
     end
@@ -111,6 +111,9 @@ function Rendering:draw()
     lg.setStencil(function()
       lg.rectangle("fill", rect.origin.x, rect.origin.y, size.width, size.height)
     end)
+
+    lg.setColor(0, 0, 0, 255)
+    lg.rectangle("fill", rect.origin.x, rect.origin.y, size.width, size.height)
 
     lg.setColor(255, 0, 0, 255)
     lg.rectangle("line", rect.origin.x, rect.origin.y, size.width, size.height)
