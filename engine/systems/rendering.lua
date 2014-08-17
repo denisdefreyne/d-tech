@@ -64,31 +64,56 @@ function Rendering.new(entities)
   return setmetatable({ entities = entities }, Rendering)
 end
 
-function Rendering:draw()
-  local camera = self.entities:firstWithComponent(Engine_Components.Camera)
-
-  local cameraPosition = camera and camera:get(Engine_Components.Position) or nil
-  if cameraPosition then
-    lg.push()
-    lg.translate(-cameraPosition.x, -cameraPosition.y)
-    lg.translate(lw.getWidth()/2, lw.getHeight()/2)
-  end
-
-  local cameraScale = camera and camera:get(Engine_Components.Scale) or nil
-  if cameraScale then
-    lg.push()
-    lg.translate(lw.getWidth()/2, lw.getHeight()/2)
-    lg.scale(cameraScale.value)
-    lg.translate(-lw.getWidth()/2, -lw.getHeight()/2)
-  end
-
-  love.graphics.setColor(255, 255, 255, 255)
+function Rendering:_drawAllEntities()
+  lg.setColor(255, 255, 255, 255)
   for entity in ipairsSortedByZ(self.entities) do
     self:drawEntity(entity)
   end
+end
 
-  if cameraScale    then lg.pop() end
-  if cameraPosition then lg.pop() end
+function Rendering:_foreachCamera(fn)
+  for entity in self.entities:pairs() do
+    if entity:get(Engine_Components.Camera) then
+      fn(entity)
+    end
+  end
+end
+
+function Rendering:draw()
+  self:_foreachCamera(function(camera)
+    local cameraPosition = camera:get(Engine_Components.Position) or nil
+    if cameraPosition then
+      lg.push()
+      lg.translate(-cameraPosition.x, -cameraPosition.y)
+      lg.translate(lw.getWidth()/2, lw.getHeight()/2)
+    end
+
+    local cameraScale = camera:get(Engine_Components.Scale) or nil
+    if cameraScale then
+      lg.push()
+      lg.translate(lw.getWidth()/2, lw.getHeight()/2)
+      lg.scale(cameraScale.value)
+      lg.translate(-lw.getWidth()/2, -lw.getHeight()/2)
+    end
+
+    local cameraSize = camera:get(Engine_Components.Size) or nil
+    if cameraSize then
+      local stencilRect = Engine_Helper.rectForEntity(camera)
+      lg.setStencil(function()
+        lg.rectangle(
+          "fill",
+          stencilRect.origin.x, stencilRect.origin.y,
+          stencilRect.size.width, stencilRect.size.height
+        )
+      end)
+    end
+
+    self:_drawAllEntities()
+
+    if cameraScale    then lg.pop() end
+    if cameraPosition then lg.pop() end
+    if cameraSize     then lg.setStencil() end
+  end)
 end
 
 function Rendering:drawEntity(entity)
