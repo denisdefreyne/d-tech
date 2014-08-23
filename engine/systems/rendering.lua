@@ -65,74 +65,13 @@ function Rendering.new(entities)
   return setmetatable({ entities = entities }, Rendering)
 end
 
-function Rendering:_drawAllEntities()
-  lg.setColor(255, 255, 255, 255)
-  for entity in ipairsSortedByZ(self.entities) do
-    self:drawEntity(entity)
-  end
-end
-
-function Rendering:_foreachCamera(fn)
-  for entity in ipairsSortedByZ(self.entities) do
-    if entity:get(Engine_Components.Camera) then
-      fn(entity)
-    end
-  end
-end
-
 function Rendering:draw()
-  self:_foreachCamera(function(camera)
-    local position       = camera:get(Engine_Components.Position)
-    local screenPosition = camera:get(Engine_Components.ScreenPosition)
-    local size           = camera:get(Engine_Components.Size)
-    local scale          = camera:get(Engine_Components.Scale)
-
-    if not size           then error("Camera lacks size")            end
-    if not position       then error("Camera lacks position")        end
-    if not screenPosition then error("Camera has no lacks position") end
-
-    local rect = Engine_Helper.rectForEntity(camera)
-
-    lg.push()
-
-    -- Center on world position
-    -- TODO: Take anchor point into account
-    lg.translate(
-      size.width / 2 - position.x,
-      size.height / 2 - position.y)
-
-    -- Center on screen position
-    -- TODO: Take anchor point into account
-    lg.translate(
-      screenPosition.x - size.width / 2,
-      screenPosition.y - size.height / 2
-    )
-
-    lg.setStencil(function()
-      lg.rectangle("fill", rect.origin.x, rect.origin.y, size.width, size.height)
-    end)
-
-    lg.setColor(0, 0, 0, 255)
-    lg.rectangle("fill", rect.origin.x, rect.origin.y, size.width, size.height)
-
-    lg.setColor(255, 0, 0, 255)
-    lg.rectangle("line", rect.origin.x, rect.origin.y, size.width, size.height)
-
-    if scale then
-      lg.translate(rect:xMiddle(), rect:yMiddle())
-      lg.scale(scale.value, scale.value)
-      lg.translate(-rect:xMiddle(), -rect:yMiddle())
-    end
-
-    self:_drawAllEntities()
-
-    lg.setStencil()
-
-    lg.pop()
-  end)
+  for entity in ipairsSortedByZ(self.entities) do
+    self:_drawEntity(entity)
+  end
 end
 
-function Rendering:drawEntity(entity)
+function Rendering:_drawEntity(entity)
   local position = entity:get(Engine_Components.Position)
   if not position then return end
 
@@ -143,12 +82,71 @@ function Rendering:drawEntity(entity)
   translateToAnchorPoint(entity)
   scale(entity)
 
-  self:drawEntitySimple(entity)
+  lg.setColor(255, 255, 255, 255)
+  self:_drawEntitySimple(entity)
 
   lg.pop()
 end
 
-function Rendering:drawEntitySimple(entity)
+function Rendering:_drawViewport(viewport)
+  local viewportComponent = viewport:get(Engine_Components.Viewport)
+
+  local camera   = viewportComponent.camera
+  local entities = viewportComponent.entities
+
+  local viewportPosition = viewport:get(Engine_Components.Position)
+  local cameraPosition   = camera:get(Engine_Components.Position)
+  local size             = viewport:get(Engine_Components.Size)
+  local scale            = camera:get(Engine_Components.Scale)
+  local rotation         = camera:get(Engine_Components.Rotation)
+
+  if not size             then error("Viewport lacks size")     end
+  if not viewportPosition then error("Viewport lacks position") end
+  if not cameraPosition   then error("Camera lacks position")   end
+
+  local rect = Engine_Helper.rectForEntity(viewport)
+
+  lg.push()
+
+  lg.setColor(255, 0, 0, 100)
+  lg.rectangle("fill", 0, 0, size.width, size.height)
+
+  lg.setStencil(function()
+    lg.rectangle("fill", 0, 0, size.width, size.height)
+  end)
+
+  lg.translate(
+    viewportPosition.x - cameraPosition.x,
+    viewportPosition.y - cameraPosition.y)
+
+  if scale then
+    lg.translate(size.width / 2, size.height / 2)
+    lg.scale(scale.value, scale.value)
+    lg.translate(-size.width / 2, -size.height / 2)
+  end
+
+  if rotation then
+    lg.translate(size.width / 2, size.height / 2)
+    lg.rotate(rotation.value)
+    lg.translate(-size.width / 2, -size.height / 2)
+  end
+
+  for entity in ipairsSortedByZ(entities) do
+    lg.setColor(255, 255, 255, 255)
+    self:_drawEntity(entity)
+  end
+
+  lg.setStencil()
+
+  lg.pop()
+end
+
+function Rendering:_drawEntitySimple(entity)
+  if entity:get(Engine_Components.Viewport) then
+    self:_drawViewport(entity)
+    return
+  end
+
   local image = entity:get(Engine_Components.Image)
   if image then
     lg.draw(Engine_AssetManager.image(image.path))
