@@ -1,11 +1,12 @@
 local Engine = require('engine')
 local Debugger_Components = require('debugger.components')
-local Theme = require('debugger.themes.space')
 
 local Inspector = {}
 
 local lg = love.graphics
 local lw = love.window
+
+Inspector.font = lg.newFont(16)
 
 local function getDetails(entity)
   local t = {}
@@ -24,22 +25,23 @@ local function getDetails(entity)
 end
 
 function Inspector.draw(entity)
-  local theme = Theme.new()
-  local panel = theme.panel
-
   local size = entity:get(Engine.Components.Size)
 
   lg.setColor(0, 0, 0, 200)
-  Engine.Types.Rect.new(0, 0, size.width, size.height):fill()
-  lg.setColor(255, 255, 255, 255)
+  love.graphics.rectangle('fill', -size.width/2, -size.height/2, size.width, size.height)
 
-  panel:draw(size)
+  lg.setColor(255, 255, 255, 255)
+  love.graphics.rectangle('line', -size.width/2, -size.height/2, size.width, size.height)
 
   local selectionTracker = entity:get(Debugger_Components.SelectionTracker)
   local selectedEntity = selectionTracker and selectionTracker.selectedEntity
 
+  lg.setFont(Inspector.font)
+
+  lg.push()
+  lg.translate(-size.width/2, -size.height/2)
+
   if not selectedEntity then
-    lg.setFont(theme.keyFont)
     lg.print('(nothing selected)', 20, 20)
   else
     local entity = selectedEntity
@@ -53,13 +55,12 @@ function Inspector.draw(entity)
       local x = 20
       local y = 20 + (i - 1) * groupSpacing + 2 * (i - 1) * lineHeight
 
-      lg.setFont(theme.keyFont)
       lg.print(detail.key, x, y)
-
-      lg.setFont(theme.valueFont)
       lg.print(detail.value, x, y + lineHeight)
     end
   end
+
+  lg.pop()
 end
 
 return Inspector

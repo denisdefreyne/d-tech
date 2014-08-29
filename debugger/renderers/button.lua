@@ -1,11 +1,12 @@
 local Engine = require('engine')
 
 local Debugger_Components = require('debugger.components')
-local Theme = require('debugger.themes.space')
 
 local Button = {}
 
 local lg = love.graphics
+
+Button.font = lg.newFont(16)
 
 function Button.draw(entity)
   local size  = entity:get(Engine.Components.Size)
@@ -30,8 +31,7 @@ function Button.draw(entity)
   lg.rectangle('line', 0, 0, size.width, size.height)
 
   -- Draw text
-  local theme = Theme.new()
-  local font = theme.buttonFont
+  local font = Button.font
   local y = size.height / 2 - font:getHeight() / 2
   lg.setFont(font)
   lg.setColor(255, 255, 255, 255)
