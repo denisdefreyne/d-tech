@@ -36,12 +36,10 @@ function Selection:draw()
   if self.selectedEntity then
     local rect = Engine.rectForEntity(self.selectedEntity)
     love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.rectangle(
-      "line",
-      rect.origin.x,
-      rect.origin.y,
-      rect.size.width,
-      rect.size.height)
+    love.graphics.push()
+    love.graphics.translate(rect.origin.x, rect.origin.y)
+    love.graphics.rectangle("line", 0, 0, rect.size.width, rect.size.height)
+    love.graphics.pop()
   end
 end
 

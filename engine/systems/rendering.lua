@@ -163,10 +163,15 @@ function Rendering:_drawEntitySimple(entity)
 
   local image = entity:get(Engine_Components.Image)
   if image then
+    local anchorPoint = entity:get(Engine_Components.AnchorPoint)
+
+    local apx = anchorPoint and anchorPoint.x or 0.5
+    local apy = anchorPoint and anchorPoint.y or 0.5
+
     lg.draw(
       Engine_AssetManager.image(image.path),
-      -rect.size.width/2,
-      -rect.size.height/2
+      - rect.size.width  * apx,
+      - rect.size.height * apy
     )
     return
   end
