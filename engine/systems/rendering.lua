@@ -88,10 +88,12 @@ function Rendering:_drawEntity(entity)
   lg.pop()
 end
 
+-- FIXME: This is duplicated!
 local function screenToWorld(screenPoint, viewportSize, viewportPosition, cameraPosition, scale)
-  -- Screen to viewport
-  -- TODO: Implement (use viewportPosition)
-  local viewportPoint = screenPoint
+  local viewportPoint = Engine.Types.Point.new(
+    screenPoint.x - viewportPosition.x + viewportSize.width  / 2,
+    screenPoint.y - viewportPosition.y + viewportSize.height / 2
+  )
 
   local unscaledWorldPoint = Engine_Types.Point.new(
     viewportPoint.x - viewportSize.width  / 2,
