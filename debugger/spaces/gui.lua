@@ -4,6 +4,7 @@ local Debugger_Systems_Mover          = require('debugger.systems.mover')
 local Debugger_Systems_Input          = require('debugger.systems.input')
 local Debugger_Systems_CursorTracking = require('debugger.systems.cursor_tracking')
 local Debugger_Systems_StepBehavior   = require('debugger.systems.step_behavior')
+local Debugger_Systems_EnterBehavior  = require('debugger.systems.enter_behavior')
 
 local GUI = {}
 
@@ -14,6 +15,7 @@ function GUI.new(entities, managedEntities)
     Debugger_Systems_Input.new(entities),
     Debugger_Systems_CursorTracking.new(entities),
     Debugger_Systems_StepBehavior.new(entities),
+    Debugger_Systems_EnterBehavior.new(entities),
   }
 
   return Engine.Space.new(entities, systems)

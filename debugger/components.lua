@@ -35,4 +35,11 @@ Components.StepBehavior = {
   format = function(self) return 'Yes' end,
 }
 
+Components.EnterBehavior = {
+  order  = 6,
+  name   = 'Enter behavior',
+  new    = function() return {} end,
+  format = function(self) return 'Yes' end,
+}
+
 return Components

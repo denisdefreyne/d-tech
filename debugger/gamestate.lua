@@ -11,6 +11,7 @@ function Debugger.new(managedEntities)
   local entities = Engine.Types.EntitiesCollection.new()
   entities:add(Debugger_Prefabs.Inspector.new())
   entities:add(Debugger_Prefabs.StepButton.new())
+  entities:add(Debugger_Prefabs.EnterButton.new())
 
   local spaces = {
     Debugger_Spaces.GUI.new(entities, managedEntities),
