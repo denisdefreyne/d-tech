@@ -54,6 +54,7 @@ end
 function Vector:scalarMultiply(scalar)
   self.x = self.x * scalar
   self.y = self.y * scalar
+  return self
 end
 
 function Vector:angle()

@@ -10,6 +10,7 @@ local lg = love.graphics
 local lw = love.window
 
 -- Sorts the entities in the given table `t` by their `z` component.
+-- FIXME: Not having a Z means not being rendered
 local function ipairsSortedByZ(t)
   local keys = {}
   for k in t:pairs() do
@@ -39,11 +40,11 @@ local function translateToAnchorPoint(entity)
   local size = Engine_Helper.sizeForEntity(entity)
   if not size then return end
 
+  local defaultAnchorPoint = Engine_Types.Point.new(0.5, 0.5)
   local anchorPoint = entity:get(Engine_Components.AnchorPoint)
-  local x = anchorPoint and anchorPoint.x or 0.5
-  local y = anchorPoint and anchorPoint.y or 0.5
+    or defaultAnchorPoint
 
-  lg.translate(-size.width * x, -size.height * y)
+  lg.translate(-size.width * anchorPoint.x, -size.height * anchorPoint.y)
 end
 
 local function rotate(entity)
@@ -79,13 +80,30 @@ function Rendering:_drawEntity(entity)
 
   lg.translate(position.x, position.y)
   rotate(entity)
-  translateToAnchorPoint(entity)
   scale(entity)
 
   lg.setColor(255, 255, 255, 255)
   self:_drawEntitySimple(entity)
 
   lg.pop()
+end
+
+local function screenToWorld(screenPoint, viewportSize, viewportPosition, cameraPosition, scale)
+  -- Screen to viewport
+  -- TODO: Implement (use viewportPosition)
+  local viewportPoint = screenPoint
+
+  local unscaledWorldPoint = Engine_Types.Point.new(
+    viewportPoint.x - viewportSize.width  / 2,
+    viewportPoint.y - viewportSize.height / 2
+  )
+
+  local scaledWorldPoint = Engine_Types.Point.new(
+    unscaledWorldPoint.x / scale.value + cameraPosition.x,
+    unscaledWorldPoint.y / scale.value + cameraPosition.y
+  )
+
+  return scaledWorldPoint
 end
 
 function Rendering:_drawViewport(viewport)
@@ -109,27 +127,21 @@ function Rendering:_drawViewport(viewport)
   lg.push()
 
   lg.setColor(255, 0, 0, 100)
-  lg.rectangle("fill", 0, 0, size.width, size.height)
+  lg.rectangle("fill", -size.width/2, -size.height/2, size.width, size.height)
 
   lg.setStencil(function()
-    lg.rectangle("fill", 0, 0, size.width, size.height)
+    lg.rectangle("fill", -size.width/2, -size.height/2, size.width, size.height)
   end)
 
-  lg.translate(
-    viewportPosition.x - cameraPosition.x,
-    viewportPosition.y - cameraPosition.y)
-
   if scale then
-    lg.translate(size.width / 2, size.height / 2)
     lg.scale(scale.value, scale.value)
-    lg.translate(-size.width / 2, -size.height / 2)
   end
 
   if rotation then
-    lg.translate(size.width / 2, size.height / 2)
     lg.rotate(rotation.value)
-    lg.translate(-size.width / 2, -size.height / 2)
   end
+
+  lg.translate(- cameraPosition.x, - cameraPosition.y)
 
   for entity in ipairsSortedByZ(entities) do
     lg.setColor(255, 255, 255, 255)
@@ -142,6 +154,8 @@ function Rendering:_drawViewport(viewport)
 end
 
 function Rendering:_drawEntitySimple(entity)
+  local rect = Engine_Helper.rectForEntity(entity)
+
   if entity:get(Engine_Components.Viewport) then
     self:_drawViewport(entity)
     return
@@ -149,7 +163,11 @@ function Rendering:_drawEntitySimple(entity)
 
   local image = entity:get(Engine_Components.Image)
   if image then
-    lg.draw(Engine_AssetManager.image(image.path))
+    lg.draw(
+      Engine_AssetManager.image(image.path),
+      -rect.size.width/2,
+      -rect.size.height/2
+    )
     return
   end
 

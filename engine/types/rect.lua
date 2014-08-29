@@ -42,6 +42,13 @@ function Rect:middle()
   return self:xMiddle(), self:yMiddle()
 end
 
+function Rect:middlePoint()
+  return Point().new(
+    self:xMiddle(),
+    self:yMiddle()
+  )
+end
+
 function Rect:xMiddle()
   return self.origin.x + self.size.width/2
 end

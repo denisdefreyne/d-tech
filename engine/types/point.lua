@@ -42,12 +42,10 @@ function mt:dup()
 end
 
 function mt:asVector()
-  if not Vector then Vector = require('engine.types.vector') end
   return Vector().new(self.x, self.y)
 end
 
 function mt:vectorTo(other)
-  if not Vector then Vector = require('engine.types.vector') end
   return Vector().new(other.x - self.x, other.y - self.y)
 end
 
