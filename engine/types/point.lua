@@ -1,6 +1,6 @@
 local Point = {}
 
-local Signal            = require('engine.vendor.hump.signal')
+local Signal = require('engine.vendor.hump.signal')
 
 local mt = {}
 
@@ -37,24 +37,24 @@ function mt:__newindex(key, value)
   end
 end
 
-function mt:dup()
-  return mt.new(self.x, self.y)
+function Point:dup()
+  return Point.new(self.x, self.y)
 end
 
-function mt:asVector()
+function Point:asVector()
   return Vector().new(self.x, self.y)
 end
 
-function mt:vectorTo(other)
+function Point:vectorTo(other)
   return Vector().new(other.x - self.x, other.y - self.y)
 end
 
-function mt:addVector(vector)
+function Point:addVector(vector)
   self.x = self.x + vector.x
   self.y = self.y + vector.y
 end
 
-function mt:format()
+function Point:format()
   return string.format('(%i, %i)', self.x, self.y)
 end
 
