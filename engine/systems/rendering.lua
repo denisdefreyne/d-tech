@@ -57,7 +57,11 @@ end
 local function scale(entity)
   local scale = entity:get(Engine_Components.Scale)
   if scale then
-    lg.scale(scale.value)
+    if scale.y then
+      lg.scale(scale.x, scale.y)
+    else
+      lg.scale(scale.x, scale.x)
+    end
   end
 end
 

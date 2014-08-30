@@ -44,8 +44,8 @@ Components.Velocity = {
 Components.Scale = {
   order  = -95,
   name   = 'Scale',
-  new    = function(value) return { value = value } end,
-  format = function(self) return string.format('%3.2f', self.value) end,
+  new    = function(x, y) return { x = x, y = y } end,
+  format = function(self) return string.format('%3.2f %3.2f', self.x, self.y) end,
 }
 
 Components.Z = {
