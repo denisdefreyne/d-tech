@@ -90,16 +90,6 @@ function CollisionDetection:draw()
   --]]
 end
 
-function CollisionDetection:_pairInteracts(a, b)
-  local aCollisionGroup = a:get(Engine_Components.CollisionGroup)
-  local bCollisionGroup = b:get(Engine_Components.CollisionGroup)
-
-  if not aCollisionGroup then return false end
-  if not bCollisionGroup then return false end
-
-  return aCollisionGroup.name ~= bCollisionGroup.name
-end
-
 function CollisionDetection:updateEntity(entity, dt)
   local rect = Engine_Helper.rectForEntity(entity)
   if not rect then return end
@@ -109,10 +99,8 @@ function CollisionDetection:updateEntity(entity, dt)
       local otherRect = Engine_Helper.rectForEntity(otherEntity)
 
       if otherRect and rect:collidesWith(otherRect) then
-        if self:_pairInteracts(entity, otherEntity) then
-          Signal.emit('game:systems:collision:detected', entity, otherEntity)
-          Signal.emit(CollisionDetection.signal, { a = entity, b = otherEntity })
-        end
+        Signal.emit('game:systems:collision:detected', entity, otherEntity)
+        Signal.emit(CollisionDetection.signal, { a = entity, b = otherEntity })
       end
     end
   end
