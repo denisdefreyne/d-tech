@@ -4,11 +4,6 @@ local Signal = require('engine.vendor.hump.signal')
 
 local mt = {}
 
-Point.__index = mt
-Point.__newindex = function(table, key, value)
-  print 'hi'
-end
-
 local _vector
 local function Vector()
   if not _vector then _vector = require('engine.types.vector') end
