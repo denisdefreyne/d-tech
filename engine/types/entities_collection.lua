@@ -1,11 +1,16 @@
 local EntitiesCollection = {}
 EntitiesCollection.__index = EntitiesCollection
 
+local Signal = require('engine.vendor.hump.signal')
+
 local _set
 local function Set()
   if not _set then _set = require('engine.types.set') end
   return _set
 end
+
+EntitiesCollection.ADD_SIGNAL    = 'engine:types:entities_collection:added'
+EntitiesCollection.REMOVE_SIGNAL = 'engine:types:entities_collection:removed'
 
 function EntitiesCollection.new()
   local t = {
@@ -24,25 +29,9 @@ function EntitiesCollection:replaceEntities(r)
   end
 end
 
-function EntitiesCollection:addAddCallback(fn)
-  self.addCallbacks:add(fn)
-end
-
-function EntitiesCollection:removeAddCallback(fn)
-  self.addCallbacks:remove(fn)
-end
-
-function EntitiesCollection:addRemoveCallback(fn)
-  self.removeCallbacks:add(fn)
-end
-
-function EntitiesCollection:removeRemoveCallback(fn)
-  self.removeCallbacks:remove(fn)
-end
-
 function EntitiesCollection:add(entity)
   self.r:add(entity)
-  for fn in self.addCallbacks:pairs() do fn(entity) end
+  Signal.emit(EntitiesCollection.ADD_SIGNAL, entity, self)
 end
 
 function EntitiesCollection:firstWithComponent(componentType)
@@ -76,7 +65,7 @@ function EntitiesCollection:firstWithComponents(componentTypes)
 end
 
 function EntitiesCollection:remove(entity)
-  for fn in self.removeCallbacks:pairs() do fn(entity) end
+  Signal.emit(EntitiesCollection.REMOVE_SIGNAL, entity, self)
   self.r:remove(entity)
 end
 

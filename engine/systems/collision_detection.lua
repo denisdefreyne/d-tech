@@ -1,5 +1,6 @@
 local Engine_Helper     = require('engine.helper')
 local Engine_Components = require('engine.components')
+local Engine_Types      = require('engine.types')
 local Signal            = require('engine.vendor.hump.signal')
 
 local CollisionDetection = {}
@@ -36,10 +37,16 @@ function CollisionDetection.new(entities)
   local collision = setmetatable(t, CollisionDetection)
 
   -- Set entity add/remove callbacks
-  t.callbacks.addEntity    = function(entity) mapEntity(collision, entity) end
-  t.callbacks.removeEntity = function(entity) unmapEntity(collision, entity) end
-  entities:addAddCallback(t.callbacks.addEntity)
-  entities:addRemoveCallback(t.callbacks.removeEntity)
+  t.callbacks.addEntity =
+    function(entity, entities) mapEntity(collision, entity) end
+  t.callbacks.removeEntity =
+    function(entity, entities) unmapEntity(collision, entity) end
+  Signal.register(
+    Engine_Types.EntitiesCollection.ADD_SIGNAL,
+    t.callbacks.addEntity)
+  Signal.register(
+    Engine_Types.EntitiesCollection.REMOVE_SIGNAL,
+    t.callbacks.removeEntity)
 
   -- Set position update callback
   local entityUpdatePosition = function(attributes)
@@ -69,9 +76,15 @@ function CollisionDetection.new(entities)
 end
 
 function CollisionDetection:leave()
-  Signal.remove(Engine_Components.Position.signal, self.callbacks.entityUpdatePosition)
-  self.entities:removeAddCallback(self.callbacks.addEntity)
-  self.entities:removeRemoveCallback(self.callbacks.removeEntity)
+  Signal.remove(
+    Engine_Components.Position.signal,
+    self.callbacks.entityUpdatePosition)
+  Signal.remove(
+    Engine_Types.EntitiesCollection.ADD_SIGNAL,
+    self.callbacks.addEntity)
+  Signal.remove(
+    Engine_Types.EntitiesCollection.REMOVE_SIGNAL,
+    self.callbacks.removeEntity)
 end
 
 function CollisionDetection:update(dt)
