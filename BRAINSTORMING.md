@@ -9,6 +9,10 @@
 
 It is useful to have multiple game states in a stack rendered. For example, a pause state or an in-game menu state could still have the state below it rendered. The topmost state (e.g. pause, menu) should likely draw a full-screen semi-opaque black rectangle so that the underlying game is marked as inactive.
 
+## Mark entities as dead
+
+Removal of entities should not happen during the game loop. Entities should be marked as dead and be removed at the end of the game loop iteration.
+
 ## Triggers
 
 Existence triggers:
