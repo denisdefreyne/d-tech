@@ -13,9 +13,9 @@ function CollisionDetection.new(entities)
   local requiredComponentTypes = {}
   local signalNames = {
     -- FIXME: Make naming more consistent
-    Engine_Types.EntitiesCollection.ADD_SIGNAL,
-    Engine_Types.EntitiesCollection.REMOVE_SIGNAL,
-    Engine_Components.Position.signal,
+    Engine_Types.EntitiesCollection.ENTITY_ADDED_SIGNAL,
+    Engine_Types.EntitiesCollection.ENTITY_REMOVED_SIGNAL,
+    Engine_Components.Position.UPDATED_SIGNAL,
   }
 
   local system = Engine_System.new(
@@ -27,11 +27,11 @@ function CollisionDetection.new(entities)
 end
 
 function CollisionDetection:handleSignal(name, attributes)
-  if name == Engine_Types.EntitiesCollection.ADD_SIGNAL then
+  if name == Engine_Types.EntitiesCollection.ENTITY_ADDED_SIGNAL then
     self:handleEntityAdded(attributes)
-  elseif name == Engine_Types.EntitiesCollection.REMOVE_SIGNAL then
+  elseif name == Engine_Types.EntitiesCollection.ENTITY_REMOVED_SIGNAL then
     self:handleEntityRemoved(attributes)
-  elseif name == Engine_Components.Position.signal then
+  elseif name == Engine_Components.Position.UPDATED_SIGNAL then
     self:handlePositionUpdated(attributes)
   else
     -- FIXME: Error
