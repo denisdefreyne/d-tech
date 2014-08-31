@@ -2,7 +2,6 @@
 
 ## To do
 
-* Do not hardcode signal constants
 * Allow getting entities by components efficiently
 
 ### Transparent game states
