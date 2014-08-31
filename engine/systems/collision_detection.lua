@@ -92,7 +92,6 @@ function CollisionDetection:updateEntity(entity, dt)
       local otherRect = Engine_Helper.rectForEntity(otherEntity)
 
       if otherRect and rect:collidesWith(otherRect) then
-        Signal.emit('game:systems:collision:detected', entity, otherEntity)
         Signal.emit(CollisionDetection.signal, { a = entity, b = otherEntity })
       end
     end
