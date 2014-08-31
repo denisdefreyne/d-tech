@@ -31,7 +31,9 @@ end
 
 function EntitiesCollection:add(entity)
   self.r:add(entity)
-  Signal.emit(EntitiesCollection.ADD_SIGNAL, entity, self)
+  Signal.emit(
+    EntitiesCollection.ADD_SIGNAL,
+    { entity = entity, entityCollection = self })
 end
 
 function EntitiesCollection:firstWithComponent(componentType)
@@ -65,7 +67,9 @@ function EntitiesCollection:firstWithComponents(componentTypes)
 end
 
 function EntitiesCollection:remove(entity)
-  Signal.emit(EntitiesCollection.REMOVE_SIGNAL, entity, self)
+  Signal.emit(
+    EntitiesCollection.REMOVE_SIGNAL,
+    { entity = entity, entityCollection = self })
   self.r:remove(entity)
 end
 
