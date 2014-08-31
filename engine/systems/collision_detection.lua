@@ -63,8 +63,9 @@ function CollisionDetection:handlePositionUpdated(attributes)
   local oldRect = Engine_Helper.rectForEntity(entity)
   local newRect = Engine_Helper.rectForEntity(entity)
 
-  oldRect.origin.x = oldRect.origin.x - attributes.dx
-  oldRect.origin.y = oldRect.origin.y - attributes.dy
+  oldRect.origin:update(
+    oldRect.origin.x - attributes.dx,
+    oldRect.origin.y - attributes.dy)
 
   self.spatialHash:update(
     entity,

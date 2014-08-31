@@ -14,16 +14,16 @@ Components.Input = {
 
 local positionSignal = 'engine:components:position:updated'
 Components.Position = {
-  new    = function(x, y) return Engine_Types.Point.new(x, y, positionSignal) end,
+  new    = function(x, y) return Engine_Types.Point:new(x, y, positionSignal) end,
   signal = positionSignal,
 }
 
 Components.AnchorPoint = {
-  new    = function(x, y) return Engine_Types.Point.new(x, y) end,
+  new    = function(x, y) return Engine_Types.Point:new(x, y) end,
 }
 
 Components.Velocity = {
-  new    = function(x, y) return Engine_Types.Vector.new(x, y) end,
+  new    = function(x, y) return Engine_Types.Vector:new(x, y) end,
 }
 
 Components.Scale = {
@@ -39,7 +39,7 @@ Components.Rotation = {
 }
 
 Components.Size = {
-  new    = function(w, h) return Engine_Types.Size.new(w, h) end,
+  new    = function(w, h) return Engine_Types.Size:new(w, h) end,
 }
 
 Components.Image = {

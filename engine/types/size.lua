@@ -1,12 +1,14 @@
-local Size = {}
-Size.__index = Size
+local class  = require('engine.vendor.middleclass.middleclass')
 
-function Size.new(width, height)
-  return setmetatable({ width = width, height = height }, Size)
+local Size = class('Size')
+
+function Size:initialize(width, height)
+  self.width = width
+  self.height = height
 end
 
 function Size:dup()
-  return Size.new(self.width, self.height)
+  return Size:new(self.width, self.height)
 end
 
 function Size:xMiddle()
@@ -17,8 +19,8 @@ function Size:yMiddle()
   return self.height/2
 end
 
-function Size:format()
-  return string.format('(%i, %i)', self.width, self.height)
+function Size:__tostring()
+  return string.format('(Size %i %i)', self.width, self.height)
 end
 
 return Size

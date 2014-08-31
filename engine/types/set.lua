@@ -1,26 +1,25 @@
-local Set = {}
-Set.__index = Set
+local class = require('engine.vendor.middleclass.middleclass')
 
-function Set.new()
-  return setmetatable({ vals = {}, size = 0 }, Set)
+local Set = class('Set')
+
+function Set:initialize()
+  self.vals = {}
 end
 
 function Set:add(e)
-  if not self.vals[e] then self.size = self.size + 1 end
   self.vals[e] = true
 end
 
 function Set:remove(e)
   self.vals[e] = nil
-  self.size = self.size - 1
-end
-
-function Set:each()
-  return pairs(self.vals)
 end
 
 function Set:pairs()
   return pairs(self.vals)
+end
+
+function Set:__tostring()
+  return string.format('(Set)')
 end
 
 return Set

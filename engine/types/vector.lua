@@ -1,5 +1,6 @@
-local Vector = {}
-Vector.__index = Vector
+local class  = require('engine.vendor.middleclass.middleclass')
+
+local Vector = class('Vector')
 
 local _point
 local function Point()
@@ -7,12 +8,13 @@ local function Point()
   return _point
 end
 
-function Vector.new(x, y)
-  return setmetatable({ x = x, y = y }, Vector)
+function Vector:initialize(x, y)
+  self.x = x
+  self.y = y
 end
 
 function Vector:dup()
-  return Vector.new(self.x, self.y)
+  return Vector:new(self.x, self.y)
 end
 
 function Vector:invertX()
@@ -40,11 +42,11 @@ function Vector:addVector(other)
 end
 
 function Vector:div(num)
-  return Vector.new(self.x / num, self.y / num)
+  return Vector:new(self.x / num, self.y / num)
 end
 
 function Vector:asPoint()
-  return Point().new(self.x, self.y)
+  return Point():new(self.x, self.y)
 end
 
 function Vector:getLength()
@@ -70,15 +72,15 @@ function Vector:sin()
 end
 
 function Vector:normal1()
-  return Vector.new(- self.y, self.x)
+  return Vector:new(- self.y, self.x)
 end
 
 function Vector:normal2()
-  return Vector.new(self.y, - self.x)
+  return Vector:new(self.y, - self.x)
 end
 
-function Vector:format()
-  return string.format('(%i, %i)', self.x, self.y)
+function Vector:__tostring()
+  return string.format('(Vector %i %i)', self.x, self.y)
 end
 
 return Vector

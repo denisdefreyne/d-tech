@@ -1,0 +1,3 @@
+[submodule "engine/vendor/middleclass"]
+	path = engine/vendor/middleclass
+	url = git@github.com:kikito/middleclass.git

@@ -1,8 +1,10 @@
-local Range = {}
-Range.__index = Range
+local class = require('engine.vendor.middleclass.middleclass')
 
-function Range.new(min, max)
-  return setmetatable({ min = min, max = max }, Range)
+local Range = class('Range')
+
+function Range:initialize(min, max)
+  self.min = min
+  self.max = max
 end
 
 function Range:includesValue(value)
@@ -11,6 +13,10 @@ end
 
 function Range:overlapsWith(other)
   return self:includesValue(other.min) or other:includesValue(self.min)
+end
+
+function Range:__tostring()
+  return string.format('(Range %i %i)', self.min, self.max)
 end
 
 return Range

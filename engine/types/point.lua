@@ -1,8 +1,7 @@
-local Point = {}
-
+local class  = require('engine.vendor.middleclass.middleclass')
 local Signal = require('engine.vendor.hump.signal')
 
-local mt = {}
+local Point = class('Point')
 
 local _vector
 local function Vector()
@@ -10,47 +9,42 @@ local function Vector()
   return _vector
 end
 
-function Point.new(x, y, signal)
-  return setmetatable({ props = { x = x, y = y, signal = signal } }, mt)
+function Point:initialize(x, y, signal)
+  self.x = x
+  self.y = y
+  self.signal = signal
 end
 
-function mt:__index(key)
-  if self.props[key] ~= nil then
-    return self.props[key]
-  else
-    return Point[key]
-  end
+function Point:dup()
+  return Point:new(self.x, self.y)
 end
 
-function mt:__newindex(key, value)
-  local oldX, oldY = self.props.x, self.props.y
-  rawset(self.props, key, value)
-  local dx, dy = self.props.x - oldX, self.props.y - oldY
+function Point:update(x, y)
+  local dx, dy = x - self.x, y - self.y
+
+  self.x, self.y = x, y
 
   if self.signal then
     Signal.emit(self.signal, { component = self, dx = dx, dy = dy })
   end
 end
 
-function Point:dup()
-  return Point.new(self.x, self.y)
-end
-
 function Point:asVector()
-  return Vector().new(self.x, self.y)
+  return Vector():new(self.x, self.y)
 end
 
 function Point:vectorTo(other)
-  return Vector().new(other.x - self.x, other.y - self.y)
+  return Vector():new(other.x - self.x, other.y - self.y)
 end
 
 function Point:addVector(vector)
-  self.x = self.x + vector.x
-  self.y = self.y + vector.y
+  self:update(
+    self.x + vector.x,
+    self.y + vector.y)
 end
 
-function Point:format()
-  return string.format('(%i, %i)', self.x, self.y)
+function Point:__tostring()
+  return string.format('(Point %i %i)', self.x, self.y)
 end
 
 return Point

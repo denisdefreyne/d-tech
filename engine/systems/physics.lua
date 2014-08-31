@@ -20,8 +20,9 @@ function Physics:updateEntity(entity, dt)
   local dx = velocity.x * dt
   local dy = velocity.y * dt
 
-  position.x = position.x + dx
-  position.y = position.y + dy
+  position:update(
+    position.x + dx,
+    position.y + dy)
 end
 
 return Physics

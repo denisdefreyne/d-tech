@@ -1,5 +1,6 @@
-local EntitiesCollection = {}
-EntitiesCollection.__index = EntitiesCollection
+local class = require('engine.vendor.middleclass.middleclass')
+
+local EntitiesCollection = class('EntitiesCollection')
 
 local Signal = require('engine.vendor.hump.signal')
 
@@ -12,21 +13,8 @@ end
 EntitiesCollection.ADD_SIGNAL    = 'engine:types:entities_collection:added'
 EntitiesCollection.REMOVE_SIGNAL = 'engine:types:entities_collection:removed'
 
-function EntitiesCollection.new()
-  local t = {
-    r = Set().new(),
-    removeCallbacks = Set().new(),
-    addCallbacks    = Set().new(),
-  }
-
-  return setmetatable(t, EntitiesCollection)
-end
-
-function EntitiesCollection:replaceEntities(r)
-  self.r = Set().new()
-  for entity in r:pairs() do
-    self:add(entity)
-  end
+function EntitiesCollection:initialize()
+  self.r = Set():new()
 end
 
 function EntitiesCollection:add(entity)

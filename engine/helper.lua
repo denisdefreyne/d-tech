@@ -18,7 +18,7 @@ function Helper.rectForEntity(entity)
   local x = anchorPoint and anchorPoint.x or 0.5
   local y = anchorPoint and anchorPoint.y or 0.5
 
-  return Engine_Types.Rect.new(
+  return Engine_Types.Rect:new(
     position.x - size.width  * x,
     position.y - size.height * y,
     size.width,
@@ -51,7 +51,7 @@ function Helper.sizeForEntity(entity)
     local scaleComponent = entity:get(Engine_Components.Scale)
     local scale = scaleComponent and scaleComponent.value or 1.0
 
-    return Engine_Types.Size.new(w * scale, h * scale)
+    return Engine_Types.Size:new(w * scale, h * scale)
   end
 
   return nil

@@ -6,7 +6,7 @@ describe('Vector', function()
   local subject
 
   before_each(function()
-    subject = Vector.new(2, 5)
+    subject = Vector:new(2, 5)
   end)
 
   describe('invertX', function()

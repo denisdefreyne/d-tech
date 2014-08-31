@@ -23,7 +23,7 @@ describe("Physics system", function()
      entityWithPositionAndVelocity:add(Engine.Components.Position, 100, 300)
      entityWithPositionAndVelocity:add(Engine.Components.Velocity, 10, 20)
 
-     entities = Engine.Types.EntitiesCollection.new()
+     entities = Engine.Types.EntitiesCollection:new()
      entities:add(blankEntity)
      entities:add(entityWithPosition)
      entities:add(entityWithVelocity)

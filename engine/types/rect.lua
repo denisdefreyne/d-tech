@@ -1,5 +1,6 @@
-local Rect = {}
-Rect.__index = Rect
+local class = require('engine.vendor.middleclass.middleclass')
+
+local Rect = class('Rect')
 
 local _point
 local function Point()
@@ -19,11 +20,9 @@ local function Range()
   return _range
 end
 
-function Rect.new(x, y, width, height)
-  return setmetatable({
-    origin = Point().new(x, y),
-    size = Size().new(width, height)
-  }, Rect)
+function Rect:initialize(x, y, width, height)
+  self.origin = Point():new(x, y)
+  self.size   = Size():new(width, height)
 end
 
 function Rect:collidesWith(other)
@@ -31,11 +30,11 @@ function Rect:collidesWith(other)
 end
 
 function Rect:xRange()
-  return Range().new(self:left(), self:right())
+  return Range():new(self:left(), self:right())
 end
 
 function Rect:yRange()
-  return Range().new(self:top(), self:bottom())
+  return Range():new(self:top(), self:bottom())
 end
 
 function Rect:middle()
@@ -43,7 +42,7 @@ function Rect:middle()
 end
 
 function Rect:middlePoint()
-  return Point().new(
+  return Point():new(
     self:xMiddle(),
     self:yMiddle()
   )
@@ -104,6 +103,10 @@ end
 
 function Rect:coords()
   return self:left(), self:top(), self:right(), self:bottom()
+end
+
+function Rect:__tostring()
+  return string.format('(Rect %s %s)', self.origin, self.size)
 end
 
 return Rect

@@ -40,7 +40,7 @@ local function translateToAnchorPoint(entity)
   local size = Engine_Helper.sizeForEntity(entity)
   if not size then return end
 
-  local defaultAnchorPoint = Engine_Types.Point.new(0.5, 0.5)
+  local defaultAnchorPoint = Engine_Types.Point:new(0.5, 0.5)
   local anchorPoint = entity:get(Engine_Components.AnchorPoint)
     or defaultAnchorPoint
 
@@ -94,17 +94,17 @@ end
 
 -- FIXME: This is duplicated!
 local function screenToWorld(screenPoint, viewportSize, viewportPosition, cameraPosition, scale)
-  local viewportPoint = Engine.Types.Point.new(
+  local viewportPoint = Engine.Types.Point:new(
     screenPoint.x - viewportPosition.x + viewportSize.width  / 2,
     screenPoint.y - viewportPosition.y + viewportSize.height / 2
   )
 
-  local unscaledWorldPoint = Engine_Types.Point.new(
+  local unscaledWorldPoint = Engine_Types.Point:new(
     viewportPoint.x - viewportSize.width  / 2,
     viewportPoint.y - viewportSize.height / 2
   )
 
-  local scaledWorldPoint = Engine_Types.Point.new(
+  local scaledWorldPoint = Engine_Types.Point:new(
     unscaledWorldPoint.x / scale.value + cameraPosition.x,
     unscaledWorldPoint.y / scale.value + cameraPosition.y
   )
