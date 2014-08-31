@@ -75,10 +75,6 @@ Components.Button = {
   new    = function(label, name) return { label = label, name = name } end,
 }
 
-Components.CollisionGroup = {
-  new    = function(name) return { name = name } end,
-}
-
 Components.Viewport = {
   new    = function(camera, entities) return { camera = camera, entities = entities } end,
 }
