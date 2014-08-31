@@ -4,10 +4,6 @@ local Engine_Types = require(here .. 'types')
 
 local Components = {}
 
-Components.Description = {
-  new    = function(s) return { string = s } end,
-}
-
 Components.Input = {
   new    = function() return {} end,
 }
