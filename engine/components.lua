@@ -140,4 +140,11 @@ Components.Viewport = {
   format = function(self) return '-' end,
 }
 
+Components.Animation = {
+  order  = -81,
+  name   = 'Animation',
+  new    = function(imagePaths, delay) return { imagePaths = imagePaths, delay = delay, curFrame = 1, curDelay = 0 } end,
+  format = function(self) return '' end,
+}
+
 return Components

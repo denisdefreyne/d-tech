@@ -162,6 +162,11 @@ end
 function Rendering:_drawEntitySimple(entity)
   local rect = Engine_Helper.rectForEntity(entity)
 
+  local anchorPoint = entity:get(Engine_Components.AnchorPoint)
+
+  local apx = anchorPoint and anchorPoint.x or 0.5
+  local apy = anchorPoint and anchorPoint.y or 0.5
+
   if entity:get(Engine_Components.Viewport) then
     self:_drawViewport(entity)
     return
@@ -169,11 +174,6 @@ function Rendering:_drawEntitySimple(entity)
 
   local image = entity:get(Engine_Components.Image)
   if image then
-    local anchorPoint = entity:get(Engine_Components.AnchorPoint)
-
-    local apx = anchorPoint and anchorPoint.x or 0.5
-    local apy = anchorPoint and anchorPoint.y or 0.5
-
     lg.draw(
       Engine_AssetManager.image(image.path),
       - rect.size.width  * apx,
@@ -185,6 +185,17 @@ function Rendering:_drawEntitySimple(entity)
   local particleSystem = entity:get(Engine_Components.ParticleSystem)
   if particleSystem then
     lg.draw(particleSystem.wrapped)
+    return
+  end
+
+  local animation = entity:get(Engine_Components.Animation)
+  if animation then
+    local imagePath = animation.imagePaths[animation.curFrame]
+    lg.draw(
+      Engine_AssetManager.image(imagePath),
+      - rect.size.width  * apx,
+      - rect.size.height * apy
+    )
     return
   end
 

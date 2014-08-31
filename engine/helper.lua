@@ -32,8 +32,17 @@ function Helper.sizeForEntity(entity)
     return size
   end
 
-  local imageComponent = entity:get(Engine_Components.Image)
-  local image = imageComponent and Engine_AssetManager.image(imageComponent.path)
+  local imageComponent     = entity:get(Engine_Components.Image)
+  local animationComponent = entity:get(Engine_Components.Animation)
+
+  local imagePath
+  if imageComponent then
+    imagePath = imageComponent.path
+  elseif animationComponent then
+    imagePath = animationComponent.imagePaths[animationComponent.curFrame]
+  end
+
+  local image = imagePath and Engine_AssetManager.image(imagePath)
 
   if image then
     local w = image:getWidth()
