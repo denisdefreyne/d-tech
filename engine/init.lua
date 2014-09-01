@@ -13,6 +13,7 @@ Engine.System       = require(here .. 'engine.system')
 
 local Helper = require(here .. 'engine.helper')
 Engine.rectForEntity    = Helper.rectForEntity
+Engine.sizeForEntity    = Helper.sizeForEntity
 Engine.registerRenderer = Helper.registerRenderer
 Engine.rendererNamed    = Helper.rendererNamed
 
