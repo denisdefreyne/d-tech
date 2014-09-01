@@ -7,8 +7,6 @@ local SpatialHash       = require('engine.vendor.collider.spatialhash')
 
 local CollisionDetection = Engine_System.newType()
 
-CollisionDetection.COLLIDING_SIGNAL = 'engine:systems:collision:detected'
-
 function CollisionDetection.new(entities)
   local requiredComponentTypes = {}
   local signalNames = {
@@ -96,8 +94,6 @@ function CollisionDetection:updateEntity(entity, dt)
         if onCollideComponent then
           onCollideComponent.fn(entity, otherEntity, self.entities)
         end
-
-        -- Signal.emit(CollisionDetection.COLLIDING_SIGNAL, { a = entity, b = otherEntity })
       end
     end
   end
