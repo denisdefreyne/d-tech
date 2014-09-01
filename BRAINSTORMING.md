@@ -16,12 +16,12 @@ Removal of entities should not happen during the game loop. Entities should be m
 
 Existence triggers:
 
-* Destroyed
-* Created
+* Destroyed (example effect: spawn explosion)
+* Created (example effect: spawn flash of light)
 
 Collision triggers:
 
-* Collision start
+* Collision start (example effect: decrease health)
 * Collision end
 
 Cursor triggers:
@@ -30,6 +30,8 @@ Cursor triggers:
 * Cursor exited
 * Mouse pressed
 * Mouse released
+* Mouse release on entity (example effect: switch to new gamestate)
+* Mouse release not on entity
 * Mouse dragged
 
 State changes:
