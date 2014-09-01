@@ -9,5 +9,6 @@ Systems.Physics            = require(here .. 'systems.physics')
 Systems.Sound              = require(here .. 'systems.sound')
 Systems.ParticleSystem     = require(here .. 'systems.particle_system')
 Systems.Lifetime           = require(here .. 'systems.lifetime')
+Systems.CursorTracking     = require(here .. 'systems.cursor_tracking')
 
 return Systems

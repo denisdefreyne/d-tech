@@ -68,7 +68,15 @@ Components.Lifetime = {
 }
 
 Components.Button = {
-  new = function(label, name) return { label = label, name = name } end,
+  new = function(label) return { label = label } end,
+}
+
+Components.OnClick = {
+  new = function(fn) return { fn = fn } end
+}
+
+Components.CursorTracking = {
+  new = function() return { isHovering = false, isDown = false } end
 }
 
 Components.Viewport = {
