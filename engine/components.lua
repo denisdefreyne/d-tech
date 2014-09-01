@@ -67,6 +67,7 @@ Components.Button = {
   new = function(label) return { label = label } end,
 }
 
+-- `fn` receives entity
 Components.OnClick = {
   new = function(fn) return { fn = fn } end
 }
@@ -81,6 +82,11 @@ Components.Viewport = {
 
 Components.Animation = {
   new = function(imagePaths, delay) return { imagePaths = imagePaths, delay = delay, curFrame = 1, curDelay = 0 } end,
+}
+
+-- `fn` receives entity, other entity, and entity collection
+Components.OnCollide = {
+  new = function(fn) return { fn = fn } end
 }
 
 return Components

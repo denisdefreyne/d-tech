@@ -8,11 +8,13 @@ end
 
 -- e.g. `ship:add(Engine.Components.Position, true)`
 function Entity:add(type, ...)
+  if not type then error('Attempted to add a component with nil type') end
   self[type] = type.new(...)
 end
 
 -- e.g. `ship:get(Engine.Components.Position)`
 function Entity:get(type)
+  if not type then error('Attempted to get a component with nil type') end
   return rawget(self, type)
 end
 
