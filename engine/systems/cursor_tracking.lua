@@ -4,16 +4,19 @@ CursorTracking.__index = CursorTracking
 local Engine_Types      = require('engine.types')
 local Engine_Helper     = require('engine.helper')
 local Engine_Components = require('engine.components')
-local Signal = require('engine.vendor.hump.signal')
+local Engine_System     = require('engine.system')
+
+local CursorTracking = Engine_System.newType()
 
 function CursorTracking.new(entities)
-  local t = {
-    entities = entities,
-    hoveredEntity = nil,
-    clickedEntity = nil,
-  }
+  local requiredComponentTypes = {}
 
-  return setmetatable(t, CursorTracking)
+  local system = Engine_System.new(CursorTracking, entities, requiredComponentTypes)
+
+  system.hoveredEntity = nil
+  system.clickedEntity = nil
+
+  return system
 end
 
 local function getMousePos()
