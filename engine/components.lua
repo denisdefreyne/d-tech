@@ -55,10 +55,6 @@ Components.Renderer = {
   new = function(name) return { name = name } end,
 }
 
-Components.Camera = {
-  new = function() return {} end,
-}
-
 Components.Timewarp = {
   new = function() return { factor = 1.0 } end,
 }
