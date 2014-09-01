@@ -12,6 +12,10 @@ It is useful to have multiple game states in a stack rendered. For example, a pa
 
 Removal of entities should not happen during the game loop. Entities should be marked as dead and be removed at the end of the game loop iteration.
 
+## Name entities
+
+Giving entities a name is useful for debugging purposes.
+
 ## Triggers
 
 Existence triggers:
@@ -47,6 +51,7 @@ Application triggers:
 Other:
 
 * Position changed
+* Always (this might be more of a custom behavior though)
 
 ## Research material
 
