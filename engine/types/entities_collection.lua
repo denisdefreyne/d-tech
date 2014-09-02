@@ -74,16 +74,15 @@ function EntitiesCollection:prune()
 end
 
 function EntitiesCollection:find(fn)
-  for e in self:pairs() do
-    if fn(e) then return e end
-  end
-  return nil
+  return fun.nth(1, fun.filter(fn, self:pairs()))
+end
+
+local function isAlive(e)
+  return not e.isDead
 end
 
 function EntitiesCollection:pairs()
-  return fun.filter(
-    function(e) return not e.isDead end,
-    self.r:pairs())
+  return fun.filter(isAlive, self.r:pairs())
 end
 
 return EntitiesCollection
