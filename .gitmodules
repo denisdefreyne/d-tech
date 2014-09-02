@@ -1,3 +1,6 @@
 [submodule "engine/vendor/middleclass"]
 	path = engine/vendor/middleclass
 	url = git@github.com:kikito/middleclass.git
+[submodule "engine/vendor/luafun"]
+	path = engine/vendor/luafun
+	url = https://github.com/rtsisyk/luafun.git

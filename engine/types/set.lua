@@ -1,4 +1,5 @@
 local class = require('engine.vendor.middleclass.middleclass')
+local fun = require('engine.vendor.luafun.fun')
 
 local Set = class('Set')
 
@@ -14,8 +15,12 @@ function Set:remove(e)
   self.vals[e] = nil
 end
 
+function Set:empty()
+  self.vals = {}
+end
+
 function Set:pairs()
-  return pairs(self.vals)
+  return fun.iter(self.vals)
 end
 
 function Set:__tostring()

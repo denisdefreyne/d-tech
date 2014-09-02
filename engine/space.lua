@@ -9,6 +9,8 @@ function Space:update(dt)
   for _, system in pairs(self.systems) do
     if system.update then system:update(dt) end
   end
+
+  self.entities:prune()
 end
 
 function Space:draw()

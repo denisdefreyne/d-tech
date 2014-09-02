@@ -1,4 +1,5 @@
 local class = require('engine.vendor.middleclass.middleclass')
+local fun = require('engine.vendor.luafun.fun')
 
 local EntitiesCollection = class('EntitiesCollection')
 
@@ -15,6 +16,7 @@ EntitiesCollection.ENTITY_REMOVED_SIGNAL = 'engine:types:entities_collection:rem
 
 function EntitiesCollection:initialize()
   self.r = Set():new()
+  self.dead = Set():new()
 end
 
 function EntitiesCollection:add(entity)
@@ -58,7 +60,17 @@ function EntitiesCollection:remove(entity)
   Signal.emit(
     EntitiesCollection.ENTITY_REMOVED_SIGNAL,
     { entity = entity, entityCollection = self })
-  self.r:remove(entity)
+
+  entity:markAsDead()
+  self.dead:add(entity)
+end
+
+function EntitiesCollection:prune()
+  for e in self.dead:pairs() do
+    self.r:remove(e)
+  end
+
+  self.dead:empty()
 end
 
 function EntitiesCollection:find(fn)
@@ -69,7 +81,9 @@ function EntitiesCollection:find(fn)
 end
 
 function EntitiesCollection:pairs()
-  return self.r:pairs()
+  return fun.filter(
+    function(e) return not e.isDead end,
+    self.r:pairs())
 end
 
 return EntitiesCollection
