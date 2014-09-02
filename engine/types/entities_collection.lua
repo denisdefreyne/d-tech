@@ -23,7 +23,7 @@ function EntitiesCollection:add(entity)
   self.r:add(entity)
   Signal.emit(
     EntitiesCollection.ENTITY_ADDED_SIGNAL,
-    { entity = entity, entityCollection = self })
+    { entity = entity, entitiesCollection = self })
 end
 
 function EntitiesCollection:firstWithComponent(componentType)
@@ -59,7 +59,7 @@ end
 function EntitiesCollection:remove(entity)
   Signal.emit(
     EntitiesCollection.ENTITY_REMOVED_SIGNAL,
-    { entity = entity, entityCollection = self })
+    { entity = entity, entitiesCollection = self })
 
   entity:markAsDead()
   self.dead:add(entity)
