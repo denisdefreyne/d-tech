@@ -37,6 +37,9 @@ function CollisionDetection:handleSignal(name, attributes)
 end
 
 function CollisionDetection:handleEntityAdded(attributes)
+  local entitiesCollection = attributes.entitiesCollection
+  if self.entities ~= entitiesCollection then return end
+
   local rect = Engine_Helper.rectForEntity(attributes.entity)
   if not rect then return end
 
@@ -45,6 +48,9 @@ function CollisionDetection:handleEntityAdded(attributes)
 end
 
 function CollisionDetection:handleEntityRemoved(attributes)
+  local entitiesCollection = attributes.entitiesCollection
+  if self.entities ~= entitiesCollection then return end
+
   local rect = Engine_Helper.rectForEntity(attributes.entity)
   if not rect then return end
 
