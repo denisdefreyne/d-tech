@@ -16,5 +16,7 @@ Engine.rectForEntity    = Helper.rectForEntity
 Engine.sizeForEntity    = Helper.sizeForEntity
 Engine.registerRenderer = Helper.registerRenderer
 Engine.rendererNamed    = Helper.rendererNamed
+Engine.screenToWorld    = Helper.screenToWorld
+Engine.entityAtPosition = Helper.entityAtPosition
 
 return Engine

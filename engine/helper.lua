@@ -57,6 +57,52 @@ function Helper.sizeForEntity(entity)
   return nil
 end
 
+function Helper.screenToWorld(screenPoint, viewport)
+  local viewportComponent = viewport:get(Engine_Components.Viewport)
+
+  local camera   = viewportComponent.camera
+  local entities = viewportComponent.entities
+
+  local viewportPosition = viewport:get(Engine_Components.Position)
+  local cameraPosition   = camera:get(Engine_Components.Position)
+  local viewportSize     = viewport:get(Engine_Components.Size)
+  local scaleC           = camera:get(Engine_Components.Scale)
+  local rotationC        = camera:get(Engine_Components.Rotation)
+
+  local scale    = scaleC and scaleC.value or 1
+  local rotation = rotationC and rotationC.value or 1
+
+  local viewportPoint = Engine_Types.Point:new(
+    screenPoint.x - viewportPosition.x + viewportSize.width  / 2,
+    screenPoint.y - viewportPosition.y + viewportSize.height / 2
+  )
+
+  local unscaledWorldPoint = Engine_Types.Point:new(
+    viewportPoint.x - viewportSize.width  / 2,
+    viewportPoint.y - viewportSize.height / 2
+  )
+
+  local scaledWorldPoint = Engine_Types.Point:new(
+    unscaledWorldPoint.x / scale + cameraPosition.x,
+    unscaledWorldPoint.y / scale + cameraPosition.y
+  )
+
+  -- TODO: Take rotation into account
+
+  return scaledWorldPoint
+end
+
+function Helper.entityAtPosition(entities, point)
+  local fn = function(e)
+    local rect = Helper.rectForEntity(e)
+    if not rect then return end
+
+    return rect:containsPoint(point)
+  end
+
+  return entities:find(fn)
+end
+
 -- TODO: Move this elsewhere
 
 local renderers = {}
