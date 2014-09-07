@@ -13,3 +13,6 @@
 [submodule "engine/vendor/slam"]
 	path = engine/vendor/slam
 	url = git://github.com/vrld/slam.git
+[submodule "engine/vendor/Advanced-Tiled-Loader"]
+	path = engine/vendor/Advanced-Tiled-Loader
+	url = git://github.com/Kadoba/Advanced-Tiled-Loader.git
