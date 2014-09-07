@@ -6,6 +6,9 @@ local Engine_Helper       = require('engine.helper')
 local Engine_Components   = require('engine.components')
 local Engine_Types        = require('engine.types')
 
+local Tiler = require("engine.vendor.Advanced-Tiled-Loader")
+Tiler.Loader.path = "assets/"
+
 local lg = love.graphics
 local lw = love.window
 
@@ -92,26 +95,6 @@ function Rendering:_drawEntity(entity)
   lg.pop()
 end
 
--- FIXME: This is duplicated!
-local function screenToWorld(screenPoint, viewportSize, viewportPosition, cameraPosition, scale)
-  local viewportPoint = Engine.Types.Point:new(
-    screenPoint.x - viewportPosition.x + viewportSize.width  / 2,
-    screenPoint.y - viewportPosition.y + viewportSize.height / 2
-  )
-
-  local unscaledWorldPoint = Engine_Types.Point:new(
-    viewportPoint.x - viewportSize.width  / 2,
-    viewportPoint.y - viewportSize.height / 2
-  )
-
-  local scaledWorldPoint = Engine_Types.Point:new(
-    unscaledWorldPoint.x / scale.value + cameraPosition.x,
-    unscaledWorldPoint.y / scale.value + cameraPosition.y
-  )
-
-  return scaledWorldPoint
-end
-
 function Rendering:_drawViewport(viewport)
   local viewportComponent = viewport:get(Engine_Components.Viewport)
 
@@ -159,6 +142,18 @@ function Rendering:_drawViewport(viewport)
   lg.pop()
 end
 
+function Rendering:_drawTilemap(entity, tilemap)
+  -- TODO: Set proper view rectangle
+  -- TODO: Preload assets
+
+  if not tilemap.wrapped then
+    tilemap.wrapped = Tiler.Loader.load(tilemap.filename)
+    tilemap.wrapped:setDrawRange(0, 0, love.graphics.getWidth()*3, love.graphics.getHeight()*3)
+  end
+
+  tilemap.wrapped:draw()
+end
+
 function Rendering:_drawEntitySimple(entity)
   local rect = Engine_Helper.rectForEntity(entity)
 
@@ -196,6 +191,12 @@ function Rendering:_drawEntitySimple(entity)
       - rect.size.width  * apx,
       - rect.size.height * apy
     )
+    return
+  end
+
+  local tilemap = entity:get(Engine_Components.Tilemap)
+  if tilemap then
+    self:_drawTilemap(entity, tilemap)
     return
   end
 

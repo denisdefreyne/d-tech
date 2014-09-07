@@ -89,4 +89,8 @@ Components.OnCollide = {
   new = function(fn) return { fn = fn } end
 }
 
+Components.Tilemap = {
+  new = function(filename) return { filename = filename } end
+}
+
 return Components
