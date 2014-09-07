@@ -7,3 +7,6 @@
 [submodule "engine/vendor/hump"]
 	path = engine/vendor/hump
 	url = git@github.com:vrld/hump.git
+[submodule "engine/vendor/collider"]
+	path = engine/vendor/collider
+	url = git://github.com/vrld/HardonCollider.git
