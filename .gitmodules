@@ -1,15 +1,15 @@
 [submodule "engine/vendor/middleclass"]
 	path = engine/vendor/middleclass
-	url = git@github.com:kikito/middleclass.git
+	url = git://github.com/kikito/middleclass.git
 [submodule "engine/vendor/luafun"]
 	path = engine/vendor/luafun
-	url = https://github.com/rtsisyk/luafun.git
+	url = git://github.com/rtsisyk/luafun.git
 [submodule "engine/vendor/hump"]
 	path = engine/vendor/hump
-	url = git@github.com:vrld/hump.git
+	url = git://github.com/vrld/hump.git
 [submodule "engine/vendor/collider"]
 	path = engine/vendor/collider
 	url = git://github.com/vrld/HardonCollider.git
 [submodule "engine/vendor/slam"]
 	path = engine/vendor/slam
-	url = git@github.com:vrld/slam.git
+	url = git://github.com/vrld/slam.git
