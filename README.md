@@ -6,8 +6,4 @@ The name is a lame pun on [id Tech](http://en.wikipedia.org/wiki/Id_Tech). I apo
 
 Documentation is currently non-existent. I apologise.
 
-Third-party libraries used:
-
-* [HUMP](http://vrld.github.io/hump/) for gamestate management and signaling
-* [HardonCollider](http://vrld.github.io/HardonCollider/) for collision detection (I am sorry for the name)
-* [SLAM](https://github.com/vrld/slam) for improved sound handling
+This engine bundles several third-party libraries. Check out the `engine/vendor` directory to see what is included.
