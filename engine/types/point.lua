@@ -29,6 +29,14 @@ function Point:update(x, y)
   end
 end
 
+function Point:updateRelative(dx, dy)
+  self.x, self.y = self.x + dx, self.y + dy
+
+  if self.signal then
+    Signal.emit(self.signal, { component = self, dx = dx, dy = dy })
+  end
+end
+
 function Point:asVector()
   return Vector():new(self.x, self.y)
 end
