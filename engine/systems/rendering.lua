@@ -72,7 +72,19 @@ end
 
 function Rendering:draw()
   for entity in ipairsSortedByZ(self.entities) do
+    self:_prepareEntity(entity)
     self:_drawEntity(entity)
+  end
+end
+
+function Rendering:_prepareEntity(entity)
+  local imageQuadComponent = entity:get(Engine_Components.ImageQuad)
+  if imageQuadComponent and not imageQuadComponent.quad then
+    imageQuadComponent.quad = love.graphics.newQuad(
+      imageQuadComponent.x,      imageQuadComponent.y,
+      imageQuadComponent.width,  imageQuadComponent.height,
+      image:getWidth(), image:getHeight()
+    )
   end
 end
 
@@ -186,23 +198,12 @@ function Rendering:_drawEntitySimple(entity)
   if imageQuad then
     local image = Engine_AssetManager.image(imageQuad.path)
 
-    if not imageQuad.quad then
-      imageQuad.quad = love.graphics.newQuad(
-        imageQuad.x,      imageQuad.y,
-        imageQuad.width,  imageQuad.height,
-        image:getWidth(), image:getHeight()
-      )
-    end
-
-    -- FIXME: Cannot obtain rect first
-    if rect then
-      lg.draw(
-        image,
-        imageQuad.quad,
-        - rect.size.width * apx,
-        - rect.size.height * apy
-      )
-    end
+    lg.draw(
+      image,
+      imageQuad.quad,
+      - rect.size.width  * apx,
+      - rect.size.height * apy
+    )
     return
   end
 
