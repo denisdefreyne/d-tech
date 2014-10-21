@@ -76,6 +76,11 @@ Components.OnClick = {
   new = function(fn) return { fn = fn } end
 }
 
+-- `fn` receives entity, dt, entities
+Components.IfMouseDown = {
+  new = function(fn) return { fn = fn } end,
+}
+
 Components.CursorTracking = {
   new = function() return { isHovering = false, isDown = false } end
 }

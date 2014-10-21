@@ -65,6 +65,11 @@ function CursorTracking:update(dt)
   elseif self.clickedEntity and self.clickedEntity == newHoveredEntity then
     local clickedCursorTracking = self.clickedEntity:get(Engine_Components.CursorTracking)
     clickedCursorTracking.isDown = true
+
+    local ifMouseDownComponent = self.clickedEntity:get(Engine_Components.IfMouseDown)
+    if ifMouseDownComponent then
+      ifMouseDownComponent.fn(self.clickedEntity, dt, self.entities)
+    end
   end
 end
 
