@@ -80,6 +80,7 @@ end
 function Rendering:_prepareEntity(entity)
   local imageQuadComponent = entity:get(Engine_Components.ImageQuad)
   if imageQuadComponent and not imageQuadComponent.quad then
+    local image = Engine_AssetManager.image(imageQuadComponent.path)
     imageQuadComponent.quad = love.graphics.newQuad(
       imageQuadComponent.x,      imageQuadComponent.y,
       imageQuadComponent.width,  imageQuadComponent.height,
