@@ -22,6 +22,10 @@ Components.Velocity = {
   new = function(x, y) return Engine_Types.Vector:new(x, y) end,
 }
 
+Components.Friction = {
+  new = function(f) return { f = f } end,
+}
+
 Components.Scale = {
   new = function(x, y) return { x = x, y = y } end,
 }

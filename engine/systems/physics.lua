@@ -16,6 +16,12 @@ end
 function Physics:updateEntity(entity, dt)
   local position = entity:get(Engine_Components.Position)
   local velocity = entity:get(Engine_Components.Velocity)
+  local friction = entity:get(Engine_Components.Friction)
+
+  if friction then
+    velocity.x = velocity.x * (1 - dt * friction.f)
+    velocity.y = velocity.y * (1 - dt * friction.f)
+  end
 
   local dx = velocity.x * dt
   local dy = velocity.y * dt
