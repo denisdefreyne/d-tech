@@ -7,11 +7,11 @@ local Engine_Types        = require(here .. 'types')
 local Helper = {}
 
 -- TODO: Move this elsewhere
-function Helper.rectForEntity(entity)
+function Helper.rectForEntity(entity, scaled)
   local position = entity:get(Engine_Components.Position)
   if not position then return nil end
 
-  local size = Helper.sizeForEntity(entity)
+  local size = Helper.sizeForEntity(entity, scaled)
   if not size then return nil end
 
   local anchorPoint = entity:get(Engine_Components.AnchorPoint)
@@ -26,7 +26,7 @@ function Helper.rectForEntity(entity)
 end
 
 -- TODO: Move this elsewhere
-function Helper.sizeForEntity(entity)
+function Helper.sizeForEntity(entity, scaled)
   local size = entity:get(Engine_Components.Size)
   if size then
     return size
@@ -36,13 +36,18 @@ function Helper.sizeForEntity(entity)
   local imageQuadComponent = entity:get(Engine_Components.ImageQuad)
   local animationComponent = entity:get(Engine_Components.Animation)
 
-  local scaleComponent = entity:get(Engine_Components.Scale)
-  local scale = scaleComponent and scaleComponent.value or 1.0
+  local scaleX = 1.0
+  local scaleY = 1.0
+  if scaled or scaled == nil then
+    local scaleComponent = entity:get(Engine_Components.Scale)
+    scaleX = scaleComponent and scaleComponent.x or 1.0
+    scaleY = scaleComponent and scaleComponent.y or scaleX
+  end
 
   if imageQuadComponent then
     return Engine_Types.Size:new(
-      imageQuadComponent.width * scale,
-      imageQuadComponent.height * scale
+      imageQuadComponent.width  * scaleX,
+      imageQuadComponent.height * scaleY
     )
   end
 
@@ -59,7 +64,7 @@ function Helper.sizeForEntity(entity)
     local w = image:getWidth()
     local h = image:getHeight()
 
-    return Engine_Types.Size:new(w * scale, h * scale)
+    return Engine_Types.Size:new(w * scaleX, h * scaleY)
   end
 
   return nil

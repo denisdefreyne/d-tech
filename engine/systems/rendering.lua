@@ -160,7 +160,7 @@ function Rendering:_drawViewport(viewport)
 end
 
 function Rendering:_drawEntitySimple(entity)
-  local rect = Engine_Helper.rectForEntity(entity)
+  local rect = Engine_Helper.rectForEntity(entity, false)
 
   local anchorPoint = entity:get(Engine_Components.AnchorPoint)
 
