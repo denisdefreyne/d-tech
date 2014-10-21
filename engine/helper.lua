@@ -33,7 +33,18 @@ function Helper.sizeForEntity(entity)
   end
 
   local imageComponent     = entity:get(Engine_Components.Image)
+  local imageQuadComponent = entity:get(Engine_Components.ImageQuad)
   local animationComponent = entity:get(Engine_Components.Animation)
+
+  local scaleComponent = entity:get(Engine_Components.Scale)
+  local scale = scaleComponent and scaleComponent.value or 1.0
+
+  if imageQuadComponent then
+    return Engine_Types.Size:new(
+      imageQuadComponent.width * scale,
+      imageQuadComponent.height * scale
+    )
+  end
 
   local imagePath
   if imageComponent then
@@ -47,9 +58,6 @@ function Helper.sizeForEntity(entity)
   if image then
     local w = image:getWidth()
     local h = image:getHeight()
-
-    local scaleComponent = entity:get(Engine_Components.Scale)
-    local scale = scaleComponent and scaleComponent.value or 1.0
 
     return Engine_Types.Size:new(w * scale, h * scale)
   end

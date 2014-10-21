@@ -42,6 +42,10 @@ Components.Image = {
   new = function(path) return { path = path } end,
 }
 
+Components.ImageQuad = {
+  new = function(path, x, y, width, height) return { path = path, x = x, y = y, width = width, height = height } end,
+}
+
 -- TODO: At some point, we’ll probably need destroy-on-finish sounds
 Components.Sound = {
   new = function(path) return { path = path } end,
