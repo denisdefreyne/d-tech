@@ -33,10 +33,36 @@ local function _oldEntityUnderCursor(self)
   end
 end
 
+-- FIXME: De-duplicate this from renderer system, and allow reverse
+local function ipairsSortedByZ(t)
+  local keys = {}
+  for k in t:pairs() do
+    if k:get(Engine_Components.Z) then
+      keys[#keys+1] = k
+    end
+  end
+
+  local compareByZ = function(entityA, entityB)
+    local az = entityA:get(Engine_Components.Z)
+    local bz = entityB:get(Engine_Components.Z)
+    return az.value > bz.value
+  end
+
+  table.sort(keys, compareByZ)
+
+  local i = 0
+  return function()
+    i = i + 1
+    if keys[i] then
+      return keys[i], t[keys[i]]
+    end
+  end
+end
+
 local function _newEntityUnderCursor(self)
   local mousePos = getMousePos()
 
-  for entity in self.entities:pairs() do
+  for entity in ipairsSortedByZ(self.entities) do
     local cursorTracking = entity:get(Engine_Components.CursorTracking)
     if cursorTracking then
       local rect = Engine_Helper.rectForEntity(entity)
