@@ -180,6 +180,13 @@ function Rendering:_drawEntitySimple(entity)
   local apx = anchorPoint and anchorPoint.x or 0.5
   local apy = anchorPoint and anchorPoint.y or 0.5
 
+  local renderer = entity:get(Engine_Components.Renderer)
+  if renderer then
+    local rendererClass = Engine_Helper.rendererNamed(renderer.name)
+    rendererClass.draw(entity)
+    return
+  end
+
   if entity:get(Engine_Components.Viewport) then
     self:_drawViewport(entity)
     return
@@ -223,12 +230,6 @@ function Rendering:_drawEntitySimple(entity)
       - rect.size.height * apy
     )
     return
-  end
-
-  local renderer = entity:get(Engine_Components.Renderer)
-  if renderer then
-    local rendererClass = Engine_Helper.rendererNamed(renderer.name)
-    rendererClass.draw(entity)
   end
 end
 
