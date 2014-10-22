@@ -145,4 +145,17 @@ function Input:mousereleased(x, y, button)
   end
 end
 
+function Input:keypressed(key, isRepeat)
+  for entity in self.entities:pairs() do
+    local onKeyDownComponent = entity:get(Engine_Components.OnKeyDown)
+    if onKeyDownComponent then
+      for i, thisKey in ipairs(onKeyDownComponent.keys) do
+        if thisKey == key then
+          onKeyDownComponent.fn(key, entity, dt)
+        end
+      end
+    end
+  end
+end
+
 return Input

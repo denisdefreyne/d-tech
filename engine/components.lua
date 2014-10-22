@@ -9,6 +9,11 @@ Components.IfKeyDown = {
   new = function(keys, fn) return { keys = keys, fn = fn } end,
 }
 
+-- `fn` receives key, entity, dt
+Components.OnKeyDown = {
+  new = function(keys, fn) return { keys = keys, fn = fn } end,
+}
+
 local positionSignal = 'engine:components:position:updated'
 Components.Position = {
   new = function(x, y) return Engine_Types.Point:new(x, y, positionSignal) end,
