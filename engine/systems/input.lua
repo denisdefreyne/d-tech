@@ -1,17 +1,18 @@
-local CursorTracking = {}
-CursorTracking.__index = CursorTracking
+local Input = {}
+Input.__index = Input
 
 local Engine_Types      = require('engine.types')
 local Engine_Helper     = require('engine.helper')
 local Engine_Components = require('engine.components')
 local Engine_System     = require('engine.system')
 
-local CursorTracking = Engine_System.newType()
+local Input = Engine_System.newType()
 
-function CursorTracking.new(entities)
+function Input.new(entities)
   local requiredComponentTypes = {}
 
-  local system = Engine_System.new(CursorTracking, entities, requiredComponentTypes)
+  local system = Engine_System.new(
+    Input, entities, requiredComponentTypes)
 
   system.hoveredEntity = nil
   system.clickedEntity = nil
@@ -75,7 +76,7 @@ local function _newEntityUnderCursor(self)
   return nil, nil
 end
 
-function CursorTracking:update(dt)
+function Input:update(dt)
   local oldHoveredEntity, oldCursorTracking = _oldEntityUnderCursor(self)
   local newHoveredEntity, newCursorTracking = _newEntityUnderCursor(self)
 
@@ -97,9 +98,25 @@ function CursorTracking:update(dt)
       ifMouseDownComponent.fn(self.clickedEntity, dt, self.entities)
     end
   end
+
+  for entity in self.entities:pairs() do
+    local ifKeyDownComponent = entity:get(Engine_Components.IfKeyDown)
+    if ifKeyDownComponent then
+      local keysDown = {}
+      for i, key in ipairs(ifKeyDownComponent.keys) do
+        if love.keyboard.isDown(key) then
+          keysDown[key] = true
+        end
+      end
+
+      for key, _ in pairs(keysDown) do
+        ifKeyDownComponent.fn(key, entity, dt)
+      end
+    end
+  end
 end
 
-function CursorTracking:mousepressed(x, y, button)
+function Input:mousepressed(x, y, button)
   local newHoveredEntity, newCursorTracking = _newEntityUnderCursor(self)
 
   if newHoveredEntity then
@@ -111,7 +128,7 @@ function CursorTracking:mousepressed(x, y, button)
   end
 end
 
-function CursorTracking:mousereleased(x, y, button)
+function Input:mousereleased(x, y, button)
   if self.clickedEntity then
     local cursorTracking = self.clickedEntity:get(Engine_Components.CursorTracking)
     if cursorTracking.isDown then
@@ -128,4 +145,4 @@ function CursorTracking:mousereleased(x, y, button)
   end
 end
 
-return CursorTracking
+return Input

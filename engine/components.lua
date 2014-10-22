@@ -4,8 +4,9 @@ local Engine_Types = require(here .. 'types')
 
 local Components = {}
 
-Components.Input = {
-  new = function() return {} end,
+-- `fn` receives key, entity, dt
+Components.IfKeyDown = {
+  new = function(keys, fn) return { keys = keys, fn = fn } end,
 }
 
 local positionSignal = 'engine:components:position:updated'
