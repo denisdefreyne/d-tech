@@ -110,7 +110,7 @@ function Input:update(dt)
       end
 
       for key, _ in pairs(keysDown) do
-        ifKeyDownComponent.fn(key, entity, dt)
+        ifKeyDownComponent.fn(key, entity, dt, self.entities)
       end
     end
   end
@@ -151,7 +151,7 @@ function Input:keypressed(key, isRepeat)
     if onKeyDownComponent then
       for i, thisKey in ipairs(onKeyDownComponent.keys) do
         if thisKey == key then
-          onKeyDownComponent.fn(key, entity, dt)
+          onKeyDownComponent.fn(key, entity, dt, self.entities)
         end
       end
     end
