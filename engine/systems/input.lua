@@ -100,6 +100,11 @@ function Input:update(dt)
   end
 
   for entity in self.entities:pairs() do
+    local whileAliveComponent = entity:get(Engine_Components.WhileAlive)
+    if whileAliveComponent then
+      whileAliveComponent.fn(entity, dt, self.entities)
+    end
+
     local ifKeyDownComponent = entity:get(Engine_Components.IfKeyDown)
     if ifKeyDownComponent then
       local keysDown = {}

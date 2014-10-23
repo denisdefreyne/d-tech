@@ -4,6 +4,11 @@ local Engine_Types = require(here .. 'types')
 
 local Components = {}
 
+-- `fn` receives entity, dt, entities
+Components.WhileAlive = {
+  new = function(fn) return { fn = fn } end,
+}
+
 -- `fn` receives key, entity, dt, entities
 Components.IfKeyDown = {
   new = function(keys, fn) return { keys = keys, fn = fn } end,
