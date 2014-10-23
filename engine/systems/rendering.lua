@@ -179,26 +179,26 @@ end
 
 function Rendering:_drawImage(entity, imageC)
   local apx, apy = anchorPointForEntity(entity)
-  local rect = Engine_Helper.rectForEntity(entity, false)
+  local size = Engine_Helper.sizeForEntity(entity, false)
 
   lg.draw(
     Engine_AssetManager.image(imageC.path),
-    - rect.size.width  * apx,
-    - rect.size.height * apy
+    - size.width  * apx,
+    - size.height * apy
   )
 end
 
 function Rendering:_drawImageQuad(entity, imageQuadC)
   local apx, apy = anchorPointForEntity(entity)
-  local rect = Engine_Helper.rectForEntity(entity, false)
+  local size = Engine_Helper.sizeForEntity(entity, false)
 
   local image = Engine_AssetManager.image(imageQuadC.path)
 
   lg.draw(
     image,
     imageQuadC.quad,
-    - rect.size.width  * apx,
-    - rect.size.height * apy
+    - size.width  * apx,
+    - size.height * apy
   )
 end
 
@@ -208,15 +208,15 @@ end
 
 function Rendering:_drawAnimation(entity, animationC)
   local apx, apy = anchorPointForEntity(entity)
-  local rect = Engine_Helper.rectForEntity(entity, false)
+  local size = Engine_Helper.sizeForEntity(entity, false)
 
   local imagePath = animationC.imagePaths[animationC.curFrame]
   local image = Engine_AssetManager.image(imagePath)
 
   lg.draw(
     image,
-    - rect.size.width  * apx,
-    - rect.size.height * apy
+    - size.width  * apx,
+    - size.height * apy
   )
 end
 
