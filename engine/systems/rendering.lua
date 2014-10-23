@@ -125,9 +125,14 @@ local function screenToWorld(screenPoint, viewportSize, viewportPosition, camera
   return scaledWorldPoint
 end
 
-function Rendering:_drawViewport(viewport)
-  local viewportComponent = viewport:get(Engine_Components.Viewport)
+local function anchorPointForEntity(entity)
+  local anchorPoint = entity:get(Engine_Components.AnchorPoint)
+  local apx = anchorPoint and anchorPoint.x or 0.5
+  local apy = anchorPoint and anchorPoint.y or 0.5
+  return apx, apy
+end
 
+function Rendering:_drawViewport(viewport, viewportComponent)
   local camera   = viewportComponent.camera
   local entities = viewportComponent.entities
 
@@ -172,14 +177,50 @@ function Rendering:_drawViewport(viewport)
   lg.pop()
 end
 
-function Rendering:_drawEntitySimple(entity)
+function Rendering:_drawImage(entity, imageC)
+  local apx, apy = anchorPointForEntity(entity)
   local rect = Engine_Helper.rectForEntity(entity, false)
 
-  local anchorPoint = entity:get(Engine_Components.AnchorPoint)
+  lg.draw(
+    Engine_AssetManager.image(imageC.path),
+    - rect.size.width  * apx,
+    - rect.size.height * apy
+  )
+end
 
-  local apx = anchorPoint and anchorPoint.x or 0.5
-  local apy = anchorPoint and anchorPoint.y or 0.5
+function Rendering:_drawImageQuad(entity, imageQuadC)
+  local apx, apy = anchorPointForEntity(entity)
+  local rect = Engine_Helper.rectForEntity(entity, false)
 
+  local image = Engine_AssetManager.image(imageQuadC.path)
+
+  lg.draw(
+    image,
+    imageQuadC.quad,
+    - rect.size.width  * apx,
+    - rect.size.height * apy
+  )
+end
+
+function Rendering:_drawParticleSystem(entity, particleSystemC)
+  lg.draw(particleSystemC.wrapped)
+end
+
+function Rendering:_drawAnimation(entity, animationC)
+  local apx, apy = anchorPointForEntity(entity)
+  local rect = Engine_Helper.rectForEntity(entity, false)
+
+  local imagePath = animationC.imagePaths[animationC.curFrame]
+  local image = Engine_AssetManager.image(imagePath)
+
+  lg.draw(
+    image,
+    - rect.size.width  * apx,
+    - rect.size.height * apy
+  )
+end
+
+function Rendering:_drawEntitySimple(entity)
   local renderer = entity:get(Engine_Components.Renderer)
   if renderer then
     local rendererClass = Engine_Helper.rendererNamed(renderer.name)
@@ -187,48 +228,33 @@ function Rendering:_drawEntitySimple(entity)
     return
   end
 
-  if entity:get(Engine_Components.Viewport) then
-    self:_drawViewport(entity)
+  local viewportC = entity:get(Engine_Components.Viewport)
+  if viewportC then
+    self:_drawViewport(entity, viewportC)
     return
   end
 
-  local image = entity:get(Engine_Components.Image)
-  if image then
-    lg.draw(
-      Engine_AssetManager.image(image.path),
-      - rect.size.width  * apx,
-      - rect.size.height * apy
-    )
+  local imageC = entity:get(Engine_Components.Image)
+  if imageC then
+    self:_drawImage(entity, imageC)
     return
   end
 
-  local imageQuad = entity:get(Engine_Components.ImageQuad)
-  if imageQuad then
-    local image = Engine_AssetManager.image(imageQuad.path)
-
-    lg.draw(
-      image,
-      imageQuad.quad,
-      - rect.size.width  * apx,
-      - rect.size.height * apy
-    )
+  local imageQuadC = entity:get(Engine_Components.ImageQuad)
+  if imageQuadC then
+    self:_drawImageQuad(entity, imageQuadC)
     return
   end
 
-  local particleSystem = entity:get(Engine_Components.ParticleSystem)
-  if particleSystem then
-    lg.draw(particleSystem.wrapped)
+  local particleSystemC = entity:get(Engine_Components.ParticleSystem)
+  if particleSystemC then
+    self:_drawParticleSystem(entity, particleSystemC)
     return
   end
 
-  local animation = entity:get(Engine_Components.Animation)
-  if animation then
-    local imagePath = animation.imagePaths[animation.curFrame]
-    lg.draw(
-      Engine_AssetManager.image(imagePath),
-      - rect.size.width  * apx,
-      - rect.size.height * apy
-    )
+  local animationC = entity:get(Engine_Components.Animation)
+  if animationC then
+    self:_drawAnimation(entity, animationC)
     return
   end
 end
