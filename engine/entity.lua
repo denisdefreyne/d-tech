@@ -12,6 +12,12 @@ function Entity:add(type, ...)
   self[type] = type.new(...)
 end
 
+-- e.g. `ship:remove(Engine.Components.Position)`
+function Entity:remove(type)
+  if not type then error('Attempted to remove a component with nil type') end
+  self[type] = nil
+end
+
 -- e.g. `ship:get(Engine.Components.Position)`
 function Entity:get(type)
   if not type then error('Attempted to get a component with nil type') end
