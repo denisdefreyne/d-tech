@@ -65,6 +65,21 @@ local function scale(entity)
   end
 end
 
+local function anchorPointForEntity(entity)
+  local anchorPoint = entity:get(Engine_Components.AnchorPoint)
+  local apx = anchorPoint and anchorPoint.x or 0.5
+  local apy = anchorPoint and anchorPoint.y or 0.5
+  return apx, apy
+end
+
+local function translateForAnchorPoint(entity)
+  local apx, apy = anchorPointForEntity(entity)
+  local size = Engine_Helper.sizeForEntity(entity, false)
+  if apx and size then
+    lg.translate(-size.width * apx, -size.height * apy)
+  end
+end
+
 function Rendering.new(entities)
   -- TODO: Find all image components and cache them here
   return setmetatable({ entities = entities }, Rendering)
@@ -98,6 +113,7 @@ function Rendering:_drawEntity(entity)
   lg.translate(position.x, position.y)
   rotate(entity)
   scale(entity)
+  translateForAnchorPoint(entity)
 
   lg.setColor(255, 255, 255, 255)
   self:_drawEntitySimple(entity)
@@ -123,13 +139,6 @@ local function screenToWorld(screenPoint, viewportSize, viewportPosition, camera
   )
 
   return scaledWorldPoint
-end
-
-local function anchorPointForEntity(entity)
-  local anchorPoint = entity:get(Engine_Components.AnchorPoint)
-  local apx = anchorPoint and anchorPoint.x or 0.5
-  local apy = anchorPoint and anchorPoint.y or 0.5
-  return apx, apy
 end
 
 function Rendering:_drawViewport(viewport, viewportComponent)
@@ -178,28 +187,13 @@ function Rendering:_drawViewport(viewport, viewportComponent)
 end
 
 function Rendering:_drawImage(entity, imageC)
-  local apx, apy = anchorPointForEntity(entity)
-  local size = Engine_Helper.sizeForEntity(entity, false)
-
-  lg.draw(
-    Engine_AssetManager.image(imageC.path),
-    - size.width  * apx,
-    - size.height * apy
-  )
+  local image = Engine_AssetManager.image(imageC.path)
+  lg.draw(image)
 end
 
 function Rendering:_drawImageQuad(entity, imageQuadC)
-  local apx, apy = anchorPointForEntity(entity)
-  local size = Engine_Helper.sizeForEntity(entity, false)
-
   local image = Engine_AssetManager.image(imageQuadC.path)
-
-  lg.draw(
-    image,
-    imageQuadC.quad,
-    - size.width  * apx,
-    - size.height * apy
-  )
+  lg.draw(image, imageQuadC.quad)
 end
 
 function Rendering:_drawParticleSystem(entity, particleSystemC)
@@ -207,24 +201,20 @@ function Rendering:_drawParticleSystem(entity, particleSystemC)
 end
 
 function Rendering:_drawAnimation(entity, animationC)
-  local apx, apy = anchorPointForEntity(entity)
-  local size = Engine_Helper.sizeForEntity(entity, false)
-
   local imagePath = animationC.imagePaths[animationC.curFrame]
   local image = Engine_AssetManager.image(imagePath)
+  lg.draw(image)
+end
 
-  lg.draw(
-    image,
-    - size.width  * apx,
-    - size.height * apy
-  )
+function Rendering:_drawCustom(entity, rendererC)
+  local rendererClass = Engine_Helper.rendererNamed(rendererC.name)
+  rendererClass.draw(entity)
 end
 
 function Rendering:_drawEntitySimple(entity)
-  local renderer = entity:get(Engine_Components.Renderer)
-  if renderer then
-    local rendererClass = Engine_Helper.rendererNamed(renderer.name)
-    rendererClass.draw(entity)
+  local rendererC = entity:get(Engine_Components.Renderer)
+  if rendererC then
+    self:_drawCustom(entity, rendererC)
     return
   end
 
