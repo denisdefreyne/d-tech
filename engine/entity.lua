@@ -2,8 +2,12 @@ local here = (...):match("(.-)[^%.]+$")
 
 local Entity = setmetatable({}, { __index = function() error('Attempted to access non-existant entity attribute') end })
 
-function Entity.new()
-  return setmetatable({ isDead = false }, { __index = Entity })
+function Entity:toString()
+  return "Entity(name = " .. self.name .. ")"
+end
+
+function Entity.new(name)
+  return setmetatable({ name = name, isDead = false }, { __tostring = Entity.toString, __index = Entity })
 end
 
 -- e.g. `ship:add(Engine.Components.Position, true)`
