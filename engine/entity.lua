@@ -22,6 +22,17 @@ function Entity:remove(type)
   self[type] = nil
 end
 
+-- e.g. `ship:clone()`
+function Entity:clone()
+  local e = Entity.new()
+
+  for k, v in pairs(self) do
+    e[k] = v
+  end
+
+  return e
+end
+
 -- e.g. `ship:get(Engine.Components.Position)`
 function Entity:get(type)
   if not type then error('Attempted to get a component with nil type') end
