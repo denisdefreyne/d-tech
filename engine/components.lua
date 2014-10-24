@@ -86,7 +86,7 @@ Components.Button = {
   new = function(label) return { label = label } end,
 }
 
--- `fn` receives entity
+-- `fn` receives entity, entities
 Components.OnClick = {
   new = function(fn) return { fn = fn } end
 }
