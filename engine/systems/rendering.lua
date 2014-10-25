@@ -85,11 +85,39 @@ function Rendering.new(entities)
   return setmetatable({ entities = entities }, Rendering)
 end
 
-function Rendering:draw()
+function Rendering:_drawEntities(entities)
+  local camera = entities:firstWithComponent(Engine_Components.Camera)
+
+  lg.push()
+
+  if camera then
+    local cameraPosition = camera:get(Engine_Components.Position)
+    local cameraScale    = camera:get(Engine_Components.Scale)
+    local cameraRotation = camera:get(Engine_Components.Rotation)
+    local cameraSize     = camera:get(Engine_Components.Size)
+
+    if not cameraPosition or not cameraSize then
+      error("Cameras require position and size")
+    end
+
+    local dx = - cameraPosition.x + cameraSize.width  / 2
+    local dy = - cameraPosition.y + cameraSize.height / 2
+
+    if cameraScale then lg.scale(cameraScale.x, cameraScale.y) end
+    if cameraRotation then lg.rotate(cameraRotation.value) end
+    lg.translate(dx, dy)
+  end
+
   for entity in ipairsSortedByZ(self.entities) do
     self:_prepareEntity(entity)
     self:_drawEntity(entity)
   end
+
+  lg.pop()
+end
+
+function Rendering:draw()
+  self:_drawEntities(self.entities)
 end
 
 function Rendering:_prepareEntity(entity)
@@ -146,14 +174,10 @@ function Rendering:_drawViewport(viewport, viewportComponent)
   local entities = viewportComponent.entities
 
   local viewportPosition = viewport:get(Engine_Components.Position)
-  local cameraPosition   = camera:get(Engine_Components.Position)
   local size             = viewport:get(Engine_Components.Size)
-  local scale            = camera:get(Engine_Components.Scale)
-  local rotation         = camera:get(Engine_Components.Rotation)
 
   if not size             then error("Viewport lacks size")     end
   if not viewportPosition then error("Viewport lacks position") end
-  if not cameraPosition   then error("Camera lacks position")   end
 
   local rect = Engine_Helper.rectForEntity(viewport)
 
@@ -166,20 +190,8 @@ function Rendering:_drawViewport(viewport, viewportComponent)
     lg.rectangle("fill", -size.width/2, -size.height/2, size.width, size.height)
   end)
 
-  if scale then
-    lg.scale(scale.value, scale.value)
-  end
-
-  if rotation then
-    lg.rotate(rotation.value)
-  end
-
-  lg.translate(- cameraPosition.x, - cameraPosition.y)
-
-  for entity in ipairsSortedByZ(entities) do
-    lg.setColor(255, 255, 255, 255)
-    self:_drawEntity(entity)
-  end
+  lg.setColor(255, 255, 255, 255)
+  Rendering:_drawEntities(entities)
 
   lg.setStencil()
 

@@ -104,6 +104,10 @@ Components.Viewport = {
   new = function(camera, entities) return { camera = camera, entities = entities } end,
 }
 
+Components.Camera = {
+  new = function() return {} end,
+}
+
 Components.Animation = {
   new = function(imagePaths, delay) return { imagePaths = imagePaths, delay = delay, curFrame = 1, curDelay = 0 } end,
 }
