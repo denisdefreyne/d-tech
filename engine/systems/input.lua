@@ -122,6 +122,17 @@ function Input:update(dt)
 end
 
 function Input:mousepressed(x, y, button)
+  if button == 'wd' or button == 'wu' then
+    for entity in self.entities:pairs() do
+      local onMouseWheelMovedC = entity:get(Engine_Components.OnMouseWheelMoved)
+      if onMouseWheelMovedC then
+        onMouseWheelMovedC.fn(entity, button)
+      end
+    end
+
+    return
+  end
+
   local newHoveredEntity, newCursorTracking = _newEntityUnderCursor(self)
 
   if newHoveredEntity then

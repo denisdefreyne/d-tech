@@ -113,4 +113,9 @@ Components.OnCollide = {
   new = function(fn) return { fn = fn } end
 }
 
+-- `fn` receives entity, button
+Components.OnMouseWheelMoved = {
+  new = function(fn) return { fn = fn } end
+}
+
 return Components
