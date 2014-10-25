@@ -75,16 +75,19 @@ local function cameraToWorld(system, x, y)
     error("Cameras require position and size")
   end
 
-  -- Translate
-  local dx = - cameraPosition.x + cameraSize.width  / 2
-  local dy = - cameraPosition.y + cameraSize.height / 2
-  x, y = x - dx, y - dy
+  local scaleX = cameraScale and cameraScale.x or 1
+  local scaleY = cameraScale and cameraScale.y or 1
+
+  -- Scale
+  x, y = x / scaleX, y / scaleY
 
   -- Rotate
   -- TODO: Implement me
 
-  -- Scale
-  -- TODO: Implement me
+  -- Translate
+  local dx = - cameraPosition.x + cameraSize.width  / 2 / scaleX
+  local dy = - cameraPosition.y + cameraSize.height / 2 / scaleY
+  x, y = x - dx, y - dy
 
   return x, y
 end
