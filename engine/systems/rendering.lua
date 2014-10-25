@@ -100,8 +100,11 @@ function Rendering:_drawEntities(entities)
       error("Cameras require position and size")
     end
 
-    local dx = - cameraPosition.x + cameraSize.width  / 2
-    local dy = - cameraPosition.y + cameraSize.height / 2
+    local scaleX = cameraScale and cameraScale.x or 1
+    local scaleY = cameraScale and cameraScale.y or 1
+
+    local dx = - cameraPosition.x + cameraSize.width  / 2 / scaleX
+    local dy = - cameraPosition.y + cameraSize.height / 2 / scaleY
 
     if cameraScale then lg.scale(cameraScale.x, cameraScale.y) end
     if cameraRotation then lg.rotate(cameraRotation.value) end
