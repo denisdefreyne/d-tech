@@ -108,9 +108,16 @@ function Rendering:_drawEntities(entities)
     lg.translate(dx, dy)
   end
 
+  local visibleRect
+  if camera then
+    visibleRect = Engine_Helper.rectForEntity(camera)
+  else
+    visibleRect = Engine_Types.Rect:new(0, 0, lw.getWidth(), lw.getHeight())
+  end
+
   for entity in ipairsSortedByZ(self.entities) do
     self:_prepareEntity(entity)
-    self:_drawEntity(entity)
+    self:_drawEntity(entity, visibleRect)
   end
 
   lg.pop()
@@ -132,7 +139,7 @@ function Rendering:_prepareEntity(entity)
   end
 end
 
-function Rendering:_drawEntity(entity)
+function Rendering:_drawEntity(entity, visibleRect)
   local position = entity:get(Engine_Components.Position)
   if not position then return end
 
@@ -144,7 +151,7 @@ function Rendering:_drawEntity(entity)
   translateForAnchorPoint(entity)
 
   lg.setColor(255, 255, 255, 255)
-  self:_drawEntitySimple(entity)
+  self:_drawEntitySimple(entity, visibleRect)
 
   lg.pop()
 end
@@ -198,15 +205,15 @@ function Rendering:_drawAnimation(entity, animationC)
   lg.draw(image)
 end
 
-function Rendering:_drawCustom(entity, rendererC)
+function Rendering:_drawCustom(entity, rendererC, visibleRect)
   local rendererClass = Engine_Helper.rendererNamed(rendererC.name)
-  rendererClass.draw(entity)
+  rendererClass.draw(entity, visibleRect)
 end
 
-function Rendering:_drawEntitySimple(entity)
+function Rendering:_drawEntitySimple(entity, visibleRect)
   local rendererC = entity:get(Engine_Components.Renderer)
   if rendererC then
-    self:_drawCustom(entity, rendererC)
+    self:_drawCustom(entity, rendererC, visibleRect)
     return
   end
 
