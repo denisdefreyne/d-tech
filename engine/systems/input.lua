@@ -60,8 +60,39 @@ local function ipairsSortedByZ(t)
   end
 end
 
+-- FIXME: This is duplicated!
+local function cameraToWorld(system, x, y)
+  local camera = system.entities:firstWithComponent(Engine_Components.Camera)
+
+  if not camera then return x, y end
+
+  local cameraPosition = camera:get(Engine_Components.Position)
+  local cameraScale    = camera:get(Engine_Components.Scale)
+  local cameraRotation = camera:get(Engine_Components.Rotation)
+  local cameraSize     = camera:get(Engine_Components.Size)
+
+  if not cameraPosition or not cameraSize then
+    error("Cameras require position and size")
+  end
+
+  -- Translate
+  local dx = - cameraPosition.x + cameraSize.width  / 2
+  local dy = - cameraPosition.y + cameraSize.height / 2
+  x, y = x - dx, y - dy
+
+  -- Rotate
+  -- TODO: Implement me
+
+  -- Scale
+  -- TODO: Implement me
+
+  return x, y
+end
+
 local function _newEntityUnderCursor(self)
   local mousePos = getMousePos()
+  local x, y = cameraToWorld(self, mousePos.x, mousePos.y)
+  mousePos.x, mousePos.y = x, y
 
   for entity in ipairsSortedByZ(self.entities) do
     local cursorTracking = entity:get(Engine_Components.CursorTracking)
@@ -122,6 +153,8 @@ function Input:update(dt)
 end
 
 function Input:mousepressed(x, y, button)
+  x, y = cameraToWorld(self, x, y)
+
   if button == 'wd' or button == 'wu' then
     for entity in self.entities:pairs() do
       local onMouseWheelMovedC = entity:get(Engine_Components.OnMouseWheelMoved)
@@ -145,6 +178,8 @@ function Input:mousepressed(x, y, button)
 end
 
 function Input:mousereleased(x, y, button)
+  x, y = cameraToWorld(self, x, y)
+
   if self.clickedEntity then
     local cursorTracking = self.clickedEntity:get(Engine_Components.CursorTracking)
     if cursorTracking.isDown then
