@@ -93,9 +93,9 @@ function Input:update(dt)
     local clickedCursorTracking = self.clickedEntity:get(Engine_Components.CursorTracking)
     clickedCursorTracking.isDown = true
 
-    local ifMouseDownComponent = self.clickedEntity:get(Engine_Components.IfMouseDown)
-    if ifMouseDownComponent then
-      ifMouseDownComponent.fn(self.clickedEntity, dt, self.entities)
+    local whileMouseDownComponent = self.clickedEntity:get(Engine_Components.WhileMouseDown)
+    if whileMouseDownComponent then
+      whileMouseDownComponent.fn(self.clickedEntity, dt, self.entities)
     end
   end
 
@@ -105,17 +105,17 @@ function Input:update(dt)
       whileAliveComponent.fn(entity, dt, self.entities)
     end
 
-    local ifKeyDownComponent = entity:get(Engine_Components.IfKeyDown)
-    if ifKeyDownComponent then
+    local whileKeyDownComponent = entity:get(Engine_Components.WhileKeyDown)
+    if whileKeyDownComponent then
       local keysDown = {}
-      for i, key in ipairs(ifKeyDownComponent.keys) do
+      for i, key in ipairs(whileKeyDownComponent.keys) do
         if love.keyboard.isDown(key) then
           keysDown[key] = true
         end
       end
 
       for key, _ in pairs(keysDown) do
-        ifKeyDownComponent.fn(key, entity, dt, self.entities)
+        whileKeyDownComponent.fn(key, entity, dt, self.entities)
       end
     end
   end

@@ -10,7 +10,7 @@ Components.WhileAlive = {
 }
 
 -- `fn` receives key, entity, dt, entities
-Components.IfKeyDown = {
+Components.WhileKeyDown = {
   new = function(keys, fn) return { keys = keys, fn = fn } end,
 }
 
@@ -92,7 +92,7 @@ Components.OnClick = {
 }
 
 -- `fn` receives entity, dt, entities
-Components.IfMouseDown = {
+Components.WhileMouseDown = {
   new = function(fn) return { fn = fn } end,
 }
 
