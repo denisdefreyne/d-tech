@@ -139,7 +139,7 @@ function Input:mousereleased(x, y, button)
     if cursorTracking.isDown then
       local onClickComponent = self.clickedEntity:get(Engine_Components.OnClick)
       if onClickComponent then
-        onClickComponent.fn(self.clickedEntity, self.entities)
+        onClickComponent.fn(self.clickedEntity, self.entities, x, y, button)
       end
     end
     cursorTracking.isDown = false
