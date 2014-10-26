@@ -27,7 +27,14 @@ function Entity:clone()
   local e = Entity.new()
 
   for k, v in pairs(self) do
-    e[k] = v
+    local newV = v
+    if type(v) == 'table' then
+      newV = {}
+      for tk, tv in pairs(v) do
+        newV[tk] = tv
+      end
+    end
+    e[k] = newV
   end
 
   return e

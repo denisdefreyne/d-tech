@@ -96,6 +96,8 @@ function Rendering:_drawEntities(entities)
     local cameraRotation = camera:get(Engine_Components.Rotation)
     local cameraSize     = camera:get(Engine_Components.Size)
 
+    -- TODO: Take anchor point into account
+
     if not cameraPosition or not cameraSize then
       error("Cameras require position and size")
     end
