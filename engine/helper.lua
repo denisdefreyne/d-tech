@@ -27,15 +27,6 @@ end
 
 -- TODO: Move this elsewhere
 function Helper.sizeForEntity(entity, scaled)
-  local size = entity:get(Engine_Components.Size)
-  if size then
-    return size
-  end
-
-  local imageComponent     = entity:get(Engine_Components.Image)
-  local imageQuadComponent = entity:get(Engine_Components.ImageQuad)
-  local animationComponent = entity:get(Engine_Components.Animation)
-
   local scaleX = 1.0
   local scaleY = 1.0
   if scaled or scaled == nil then
@@ -43,6 +34,17 @@ function Helper.sizeForEntity(entity, scaled)
     scaleX = scaleComponent and scaleComponent.x or 1.0
     scaleY = scaleComponent and scaleComponent.y or scaleX
   end
+
+  local size = entity:get(Engine_Components.Size)
+  if size then
+    return Engine_Types.Size:new(
+      size.width  / scaleX,
+      size.height / scaleY)
+  end
+
+  local imageComponent     = entity:get(Engine_Components.Image)
+  local imageQuadComponent = entity:get(Engine_Components.ImageQuad)
+  local animationComponent = entity:get(Engine_Components.Animation)
 
   if imageQuadComponent then
     return Engine_Types.Size:new(
