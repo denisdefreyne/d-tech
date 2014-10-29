@@ -120,17 +120,19 @@ function Input:update(dt)
     self.hoveredEntity = newHoveredEntity
   end
 
+  if self.hoveredEntity then
+    local whileMouseDownC = self.hoveredEntity:get(Engine_Components.WhileMouseDown)
+    if whileMouseDownC then
+      whileMouseDownC.fn(self.hoveredEntity, dt, self.entities)
+    end
+  end
+
   if self.clickedEntity and self.clickedEntity ~= newHoveredEntity then
     local clickedCursorTracking = self.clickedEntity:get(Engine_Components.CursorTracking)
     clickedCursorTracking.isDown = false
   elseif self.clickedEntity and self.clickedEntity == newHoveredEntity then
     local clickedCursorTracking = self.clickedEntity:get(Engine_Components.CursorTracking)
     clickedCursorTracking.isDown = true
-
-    local whileMouseDownComponent = self.clickedEntity:get(Engine_Components.WhileMouseDown)
-    if whileMouseDownComponent then
-      whileMouseDownComponent.fn(self.clickedEntity, dt, self.entities)
-    end
   end
 
   for entity in self.entities:pairs() do
