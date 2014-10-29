@@ -215,7 +215,28 @@ function Rendering:_drawCustom(entity, rendererC, visibleRect)
   rendererClass.draw(entity, visibleRect)
 end
 
+function Rendering:_drawOutline(entity, outlineC, visibleRect)
+  local size = Engine_Helper.sizeForEntity(entity, false)
+  local cursorTrackingC = entity:get(Engine_Components.CursorTracking)
+
+  if cursorTrackingC and cursorTrackingC.isHovering then
+    lg.setColor(255, 0, 0, 255)
+  else
+    lg.setColor(255, 0, 255, 255)
+  end
+
+  lg.rectangle("line", 0, 0, size.width, size.height)
+
+  lg.setColor(255, 255, 255, 255)
+end
+
 function Rendering:_drawEntitySimple(entity, visibleRect)
+  local outlineC = entity:get(Engine_Components.Outline)
+  if outlineC then
+    self:_drawOutline(entity, outlineC, visibleRect)
+    -- No return!
+  end
+
   local rendererC = entity:get(Engine_Components.Renderer)
   if rendererC then
     self:_drawCustom(entity, rendererC, visibleRect)

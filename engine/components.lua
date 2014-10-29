@@ -122,4 +122,8 @@ Components.OnMouseWheelMoved = {
   new = function(fn) return { fn = fn } end
 }
 
+Components.Outline = {
+  new = function() return {} end
+}
+
 return Components
