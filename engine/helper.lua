@@ -38,8 +38,8 @@ function Helper.sizeForEntity(entity, scaled)
   local size = entity:get(Engine_Components.Size)
   if size then
     return Engine_Types.Size:new(
-      size.width  / scaleX,
-      size.height / scaleY)
+      size.width  * scaleX,
+      size.height * scaleY)
   end
 
   local imageComponent     = entity:get(Engine_Components.Image)
