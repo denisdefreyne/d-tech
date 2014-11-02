@@ -105,6 +105,13 @@ function Rect:coords()
   return self:left(), self:top(), self:right(), self:bottom()
 end
 
+function Rect:grow(distance)
+  return Rect:new(
+    self:left() - distance, self:top() - distance,
+    self.size.width + distance*2, self.size.height + distance*2
+  )
+end
+
 function Rect:__tostring()
   return string.format('(Rect %s %s)', self.origin, self.size)
 end
