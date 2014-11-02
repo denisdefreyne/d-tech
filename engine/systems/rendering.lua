@@ -13,7 +13,7 @@ local lw = love.window
 -- FIXME: Not having a Z means not being rendered
 local function ipairsSortedByZ(t)
   local keys = {}
-  for k in t:pairs() do
+  for _, k in pairs(t) do
     if k:get(Engine_Components.Z) then
       keys[#keys+1] = k
     end
@@ -120,7 +120,8 @@ function Rendering:_drawEntities(entities)
     visibleRect = Engine_Types.Rect:new(0, 0, lw.getWidth(), lw.getHeight())
   end
 
-  for entity in ipairsSortedByZ(self.entities) do
+  local relevantEntities = self.entities:queryRect(visibleRect)
+  for entity in ipairsSortedByZ(relevantEntities) do
     self:_prepareEntity(entity)
     self:_drawEntity(entity, visibleRect)
   end

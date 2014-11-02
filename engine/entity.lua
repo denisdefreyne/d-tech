@@ -1,25 +1,44 @@
-local here = (...):match("(.-)[^%.]+$")
+local Signal = require('engine.vendor.hump.signal')
 
-local Entity = setmetatable({}, { __index = function() error('Attempted to access non-existant entity attribute') end })
+local Entity = setmetatable(
+  {},
+  { __index = function() error('Attempted to access non-existant entity attribute') end }
+)
+
+Entity.COMPONENT_ADDED_SIGNAL   = 'engine:entity:component_added'
+Entity.COMPONENT_REMOVED_SIGNAL = 'engine:entity:component_removed'
 
 function Entity:toString()
   return "Entity(name = " .. self.name .. ")"
 end
 
 function Entity.new(name)
-  return setmetatable({ name = name, isDead = false }, { __tostring = Entity.toString, __index = Entity })
+  return setmetatable(
+    { name = name, isDead = false },
+    { __tostring = Entity.toString, __index = Entity }
+  )
 end
 
 -- e.g. `ship:add(Engine.Components.Position, true)`
 function Entity:add(type, ...)
   if not type then error('Attempted to add a component with nil type') end
   self[type] = type.new(...)
+
+  Signal.emit(
+    Entity.COMPONENT_ADDED_SIGNAL,
+    { entity = self, component = self[type], componentType = type })
 end
 
 -- e.g. `ship:remove(Engine.Components.Position)`
 function Entity:remove(type)
+  local oldType = self[type]
+
   if not type then error('Attempted to remove a component with nil type') end
   self[type] = nil
+
+  Signal.emit(
+    Entity.COMPONENT_REMOVED_SIGNAL,
+    { entity = self, component = oldType, componentType = type })
 end
 
 -- e.g. `ship:clone()`

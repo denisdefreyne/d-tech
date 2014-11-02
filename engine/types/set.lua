@@ -15,6 +15,14 @@ function Set:remove(e)
   self.vals[e] = nil
 end
 
+function Set:contains(e)
+  if self.vals[e] then
+    return true
+  else
+    return false
+  end
+end
+
 function Set:empty()
   self.vals = {}
 end

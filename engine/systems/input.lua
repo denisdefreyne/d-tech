@@ -37,7 +37,7 @@ end
 -- FIXME: De-duplicate this from renderer system, and allow reverse
 local function ipairsSortedByZ(t)
   local keys = {}
-  for k in t:pairs() do
+  for _, k in pairs(t) do
     if k:get(Engine_Components.Z) then
       keys[#keys+1] = k
     end
@@ -97,7 +97,8 @@ local function _newEntityUnderCursor(self)
   local x, y = cameraToWorld(self, mousePos.x, mousePos.y)
   mousePos.x, mousePos.y = x, y
 
-  for entity in ipairsSortedByZ(self.entities) do
+  local relevantEntities = self.entities:queryPoint(Engine_Types.Point:new(x, y))
+  for entity in ipairsSortedByZ(relevantEntities) do
     local cursorTracking = entity:get(Engine_Components.CursorTracking)
     if cursorTracking then
       local rect = Engine_Helper.rectForEntity(entity)
