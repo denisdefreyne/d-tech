@@ -136,12 +136,13 @@ function Input:update(dt)
     clickedCursorTracking.isDown = true
   end
 
-  for entity in self.entities:pairs() do
+  local whileAliveEntities = self.entities:queryComponentType(Engine_Components.WhileAlive)
+  for entity in whileAliveEntities:pairs() do
     local whileAliveComponent = entity:get(Engine_Components.WhileAlive)
-    if whileAliveComponent then
-      whileAliveComponent.fn(entity, dt, self.entities)
-    end
+    whileAliveComponent.fn(entity, dt, self.entities)
+  end
 
+  for entity in self.entities:pairs() do
     local whileKeyDownComponent = entity:get(Engine_Components.WhileKeyDown)
     if whileKeyDownComponent then
       local keysDown = {}

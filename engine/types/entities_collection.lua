@@ -16,15 +16,25 @@ local function PositionIndex()
   return _positionIndex
 end
 
+local _componentIndex
+local function ComponentIndex()
+  if not _componentIndex then _componentIndex = require('engine.types.component_index') end
+  return _componentIndex
+end
+
 EntitiesCollection.ENTITY_ADDED_SIGNAL   = 'engine:types:entities_collection:added'
 EntitiesCollection.ENTITY_REMOVED_SIGNAL = 'engine:types:entities_collection:removed'
 
--- Components.Position.UPDATED_SIGNAL
-
-function EntitiesCollection:initialize()
+function EntitiesCollection:initialize(name)
+  self.name = name
   self.r = Set():new()
   self.dead = Set():new()
   self.positionIndex = PositionIndex().new(self)
+  self.componentIndex = ComponentIndex().new(self)
+end
+
+function EntitiesCollection:__tostring()
+  return '(EntitiesCollection ' .. self.name .. ')'
 end
 
 function EntitiesCollection:add(entity)
@@ -44,6 +54,10 @@ end
 
 function EntitiesCollection:queryRect(rect)
   return self.positionIndex:queryRect(rect)
+end
+
+function EntitiesCollection:queryComponentType(componentType)
+  return self.componentIndex:queryComponentType(componentType)
 end
 
 function EntitiesCollection:firstWithComponent(componentType)
